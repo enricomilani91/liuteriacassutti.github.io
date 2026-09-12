@@ -13,19 +13,24 @@
 </head>
 <body>
 
-<header class="nav" id="nav">
+<header class="nav">
   <a class="brand" href="#top">
-    <img src="images/logo-Cassutti-trasparente-200.png" alt="">
-    <span>Cassutti</span>
+    <img src="images/logo-cassutti-testo-normale-lungo.png"
+         srcset="images/logo-cassutti-testo-normale-lungo.png 1x,
+                 images/logo-cassutti-testo-lungo-retina.png 2x"
+         width="200" height="22" alt="Liuteria Cassutti">
   </a>
-  <button class="menu-toggle" id="toggle" aria-label="Menu" aria-expanded="false">
+  <button class="menu-toggle" id="toggle" aria-label="Menu" aria-expanded="false" aria-controls="menu">
     <span></span><span></span><span></span>
   </button>
-  <nav class="menu" id="menu">
-    <a href="#about">About</a>
-    <a href="#disciplines">Workshop</a>
-    <a href="#works">Works</a>
-    <a href="#contact">Contact</a>
+  <nav class="menu" id="menu" aria-label="Main">
+    <a href="#top">home</a>
+    <a href="#about">about me</a>
+    <a href="#workshop">workshop</a>
+    <a href="#instruments">new instruments</a>
+    <a href="#restoration">restoration</a>
+    <a href="#diary">diary</a>
+    <a href="#contact">contacts</a>
   </nav>
 </header>
 
@@ -68,7 +73,7 @@
   <div class="scroll-rule"><img src="images/ricciolo-web-250.png" alt=""></div>
 
   <!-- DISCIPLINES -->
-  <section class="disciplines" id="disciplines">
+  <section class="disciplines" id="workshop">
     <div class="wrap">
       <div class="section-head reveal">
         <span class="eyebrow">Inside the workshop</span>
@@ -176,22 +181,19 @@
 </footer>
 
 <script>
-// nav solidify on scroll
-const nav=document.getElementById('nav');
-const onScroll=()=>nav.classList.toggle('solid',window.scrollY>40);
-onScroll();window.addEventListener('scroll',onScroll,{passive:true});
-
-// mobile menu
+// mobile menu — l'header è sempre opaco, non serve solidificarlo allo scroll
 const toggle=document.getElementById('toggle');
 const menu=document.getElementById('menu');
-toggle.addEventListener('click',()=>{
-  const open=menu.classList.toggle('open');
+const setMenu=(open)=>{
+  menu.classList.toggle('open',open);
   toggle.classList.toggle('open',open);
   toggle.setAttribute('aria-expanded',open);
+};
+toggle.addEventListener('click',()=>setMenu(!menu.classList.contains('open')));
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+document.addEventListener('keydown',(e)=>{
+  if(e.key==='Escape'&&menu.classList.contains('open')){setMenu(false);toggle.focus()}
 });
-menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
-  menu.classList.remove('open');toggle.classList.remove('open');toggle.setAttribute('aria-expanded',false);
-}));
 
 // scroll reveals
 const io=new IntersectionObserver((entries)=>{
