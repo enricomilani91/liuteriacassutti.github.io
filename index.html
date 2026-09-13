@@ -13,6 +13,19 @@
 </head>
 <body>
 
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- HERO -->
+<!-- nell'originale lo slider stava sopra l'header (slider_position:"above")
+     e occupava 100vh - header: l'header resta appoggiato in basso alla prima
+     schermata e si incolla in alto allo scroll (position:sticky, banner 03) -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <h1>Liuteria Cassutti</h1>
+    <p>The art of giving voice to wood</p>
+  </div>
+</section>
+
 <header class="nav">
   <a class="brand" href="#top">
     <img src="images/logo-cassutti-testo-normale-lungo.png"
@@ -34,30 +47,7 @@
   </nav>
 </header>
 
-<main id="top">
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-copy reveal">
-        <span class="eyebrow">Liuteria Cassutti · Padova</span>
-        <h1>Wood is alive.<br>An instrument of wood<br>also has a <em>soul</em>.</h1>
-        <p class="lede">A soul that speaks with the voice of music — building and restoration of violins, violas and cellos.</p>
-        <div class="hero-cta">
-          <a class="btn" href="#works">See the works</a>
-          <a class="btn ghost" href="#contact">Visit the workshop</a>
-        </div>
-      </div>
-      <figure class="hero-figure reveal">
-        <div class="frame">
-          <img src="images/foto-Alberto-home.gif" alt="Alberto Cassutti at the workbench">
-        </div>
-        <figcaption>Alberto Cassutti · at the bench</figcaption>
-      </figure>
-    </div>
-  </section>
-
-  <div class="scroll-rule"><img src="images/ricciolo-web-250.png" alt=""></div>
+<main id="main">
 
   <!-- MANIFESTO -->
   <section class="manifesto" id="about">
@@ -213,12 +203,6 @@ const gio=new IntersectionObserver((entries)=>{
 },{threshold:0.12});
 document.querySelectorAll('.plate').forEach(el=>gio.observe(el));
 
-// reveal hero immediately on load
-window.addEventListener('load',()=>{
-  document.querySelectorAll('.hero .reveal').forEach((el,i)=>{
-    el.style.transitionDelay=(i*120)+'ms';el.classList.add('in');
-  });
-});
 </script>
 </body>
 </html>

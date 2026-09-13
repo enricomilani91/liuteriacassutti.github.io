@@ -108,51 +108,90 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 
 :focus-visible{outline:2px solid var(--tan);outline-offset:3px}
 
-/* ============ 04 · HERO ============ */
-/* legacy — riscritto allo step 3 */
-.hero{
-  position:relative;min-height:100svh;display:flex;align-items:center;
-  padding-top:clamp(6rem,12vh,9rem);padding-bottom:4rem;
-  background:
-    radial-gradient(120% 90% at 78% 15%, rgba(162,62,43,0.14), transparent 55%),
-    radial-gradient(90% 80% at 12% 90%, rgba(185,146,90,0.08), transparent 60%),
-    var(--ink);
+/* l'header non è più il primo elemento della pagina (l'hero lo precede, come
+   nell'originale): lo skip-link resta l'unico modo rapido per saltare al
+   contenuto da tastiera */
+.skip-link{
+  position:absolute;left:50%;top:0;transform:translate(-50%,-120%);
+  z-index:100;padding:0.7rem 1.2rem;
+  background:var(--charcoal);color:#fff;
+  font-size:0.8rem;letter-spacing:0.08em;
+  transition:transform .25s ease;
 }
-.hero .wrap{display:grid;grid-template-columns:1.15fr 0.85fr;gap:clamp(2rem,5vw,4.5rem);align-items:center;width:100%}
-.hero-copy .eyebrow{display:block;margin-bottom:1.6rem}
-.hero h1{
-  font-family:var(--display);font-weight:300;
-  font-size:clamp(2.5rem,6vw,4.6rem);line-height:1.04;
-  letter-spacing:-0.01em;color:var(--parchment);
-}
-.hero h1 em{font-style:italic;color:var(--gilt)}
-.hero .lede{
-  font-family:var(--display);font-style:italic;font-weight:300;
-  font-size:clamp(1.3rem,2.4vw,1.9rem);line-height:1.4;
-  color:var(--muted);margin-top:1.8rem;max-width:30ch;
-}
-.hero-cta{margin-top:2.6rem;display:flex;gap:1.4rem;align-items:center;flex-wrap:wrap}
-.btn{
-  font-family:var(--body);font-size:0.74rem;letter-spacing:0.18em;text-transform:uppercase;
-  padding:0.85rem 1.7rem;border:1px solid var(--gilt);color:var(--parchment);
-  border-radius:2px;transition:background .35s,color .35s;
-}
-.btn:hover{background:var(--gilt);color:var(--ink)}
-.btn.ghost{border-color:var(--hairline);color:var(--muted)}
-.btn.ghost:hover{border-color:var(--parchment);color:var(--parchment);background:transparent}
+.skip-link:focus{transform:translate(-50%,0)}
 
-.hero-figure{position:relative}
-.hero-figure .frame{
-  position:relative;padding:0.55rem;
-  background:linear-gradient(160deg,rgba(185,146,90,0.35),rgba(185,146,90,0.05));
-  border-radius:3px;box-shadow:0 40px 80px -40px rgba(0,0,0,0.9);
+/* ============ 04 · HERO ============ */
+/* Ricostruito allo step 3 sul comportamento reale dell'originale: lo slider
+   Avada aveva data-full_screen="1" con slider_position:"above", quindi il JS
+   del tema gli dava height = window.height() - headerHeight. Qui è CSS puro. */
+.hero{
+  position:relative;
+  height:calc(100svh - var(--header-h));
+  min-height:420px;
+  display:grid;place-items:center;
+  padding:0 clamp(1.4rem,5vw,3rem);
+  text-align:center;
+  background-image:url("../images/home-C.jpg");
+  background-size:cover;
+  background-position:center 38%;   /* la tavola sta nella metà bassa dello scatto */
+  background-attachment:fixed;      /* il parallax dell'originale, senza JS */
+  background-color:var(--charcoal); /* si vede solo finché la foto non è decodificata */
 }
-.hero-figure img{
-  width:100%;border-radius:2px;filter:grayscale(0.15) contrast(1.05) brightness(0.96);
+
+/* Protezione del testo bianco sulla foto. home-C.jpg ha luminanza media
+   134/255 ma è più chiara nella metà superiore (tavola di abete a sgorbio sotto
+   luce radente), proprio dove sta il wordmark. Overlay piatto e non gradiente
+   top-weighted: uniforme a ogni ritaglio responsive, senza stop percentuali da
+   riallineare al soggetto quando il crop cambia. Validato a schermo dal
+   committente a 0.35 — se in futuro la foto cambia, va rimisurato. */
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:rgba(0,0,0,0.35);
 }
-.hero-figure figcaption{
-  font-family:var(--body);font-size:0.66rem;letter-spacing:0.22em;text-transform:uppercase;
-  color:var(--muted-dim);margin-top:1rem;text-align:right;
+
+/* Niente cap artificiale sulla larghezza: `width:max-content` rende il blocco
+   largo quanto la riga più lunga senza andare a capo, e `max-width:100%` lo fa
+   rientrare — e quindi mandare a capo — solo quando davvero non entra. Così su
+   desktop titolo e sottotitolo stanno su una riga sola a ogni larghezza, senza
+   breakpoint da tarare a mano. */
+.hero-inner{
+  position:relative;z-index:1;
+  width:max-content;
+  max-width:100%;
+}
+
+.hero h1{
+  color:#fff;
+  text-transform:uppercase;
+  text-wrap:balance;   /* quando lo spazio finisce davvero, spezza equilibrato */
+  font-size:clamp(2.1rem,6vw,70px);   /* 70px come l'originale */
+  line-height:1.2;                    /* 84/70 dell'originale */
+  font-weight:400;
+}
+.hero p{
+  color:#fff;
+  font-family:var(--display);
+  font-size:clamp(1.05rem,2.2vw,24px);
+  letter-spacing:2px;
+  line-height:1.5;
+  text-wrap:balance;
+  margin-top:clamp(0.8rem,2vh,1.4rem);
+  /* il letter-spacing aggiunge 2px anche dopo l'ultimo carattere: senza questo
+     la riga risulta centrata 1px a sinistra rispetto al titolo */
+  margin-right:-2px;
+}
+
+/* L'animazione d'ingresso è in CSS e non in JS: l'hero è il contenuto più
+   importante della pagina e non deve dipendere dallo script per esistere.
+   (Le sezioni sotto usano ancora .reveal — sistemato allo step 9.) */
+@media(prefers-reduced-motion:no-preference){
+  .hero h1,.hero p{animation:hero-rise 1s cubic-bezier(.22,.61,.36,1) backwards}
+  .hero h1{animation-delay:.15s}
+  .hero p{animation-delay:.45s}
+}
+@keyframes hero-rise{
+  from{opacity:0;transform:translateY(22px)}
+  to{opacity:1;transform:none}
 }
 
 /* ============ 05 · INTRO ============ */
@@ -312,8 +351,9 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
   .menu-toggle.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 }
 @media(max-width:860px){
-  .hero .wrap{grid-template-columns:1fr;gap:2.6rem}
-  .hero-figure{max-width:340px;order:-1}
+  /* background-attachment:fixed è rotto su iOS e inutile sul touch —
+     l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
+  .hero{background-attachment:scroll}
   .contact .wrap{grid-template-columns:1fr;gap:2.6rem}
   .grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -326,5 +366,6 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
   .reveal,.plate{opacity:1!important;transform:none!important;transition:none!important}
+  .hero{background-attachment:scroll}
   .plate img{transition:none}
 }
