@@ -63,15 +63,6 @@ h6{font-size:0.95rem}
 }
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(1.4rem,4vw,3.5rem)}
 
-.scroll-rule{
-  display:flex;align-items:center;justify-content:center;gap:1.4rem;
-  margin:clamp(3rem,7vw,5.5rem) 0;
-}
-.scroll-rule::before,.scroll-rule::after{
-  content:"";height:1px;flex:1;max-width:230px;
-  background:linear-gradient(90deg,transparent,var(--rule-strong),transparent);
-}
-.scroll-rule img{width:118px;opacity:0.75}
 
 /* ============ 03 · HEADER ============ */
 header.nav{
@@ -195,19 +186,36 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 }
 
 /* ============ 05 · INTRO ============ */
-/* legacy (.manifesto) — riscritto allo step 4 */
-.manifesto{padding:clamp(2rem,6vw,4rem) 0}
-.manifesto .wrap{max-width:820px}
-.manifesto .eyebrow{display:block;text-align:center;margin-bottom:2.4rem}
-.manifesto p{
-  font-family:var(--display);font-weight:300;
-  font-size:clamp(1.35rem,2.6vw,1.95rem);line-height:1.5;
-  color:var(--parchment);text-align:center;margin-bottom:1.4rem;
+/* 3 colonne da 1/3 sotto l'hero — padding 150/105 dell'originale.
+   Stessa lingua della bio (banner 06): Playfair sui titoli, misura di riga
+   temperata, immagini alla larghezza della colonna. */
+.intro{
+  padding-top:clamp(3.5rem,10vw,150px);
+  padding-bottom:clamp(3rem,7vw,105px);
 }
-.manifesto p.close{
-  font-family:var(--body);font-size:1.1rem;line-height:1.7;
-  color:var(--muted);max-width:60ch;margin:2rem auto 0;font-style:italic;
+.intro-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(1.8rem,4vw,3rem);
+  align-items:start;
 }
+/* le righe dei titoli sono spezzate a mano con <br> nell'originale: la scala
+   va tenuta sotto la larghezza di colonna, non ereditata dal banner 02
+   (h2 arriverebbe a 41px e "of violins, violas" sborderebbe) */
+.intro h2{font-size:clamp(1.5rem,2.4vw,1.9rem);line-height:1.35}
+.intro-ricciolo{width:min(100%,250px);margin-top:clamp(1.4rem,3vw,2.2rem);opacity:0.75}
+.intro-stemma{width:min(60%,175px);margin-top:clamp(1.6rem,3.5vw,2.6rem)}
+.intro-photo{width:100%;max-width:300px}
+.intro-quote{
+  font-size:clamp(1.1rem,1.8vw,1.45rem);
+  line-height:1.65;
+  margin-top:clamp(1.2rem,2.5vw,1.6rem);
+  color:var(--heading);
+}
+/* la colonna 1/3 misura ~35 caratteri: un terzo della bio. Più stretta è la
+   misura, più corta va l'interlinea — 2.05 qui slegherebbe le righe */
+.intro-prose{line-height:1.8}
+.intro-prose p + p{margin-top:1.4rem}
 
 /* ============ 06 · BIO (about me) ============ */
 /* `.band` è la base condivisa con le 5 bande dello step 5: foto fullwidth,
@@ -399,6 +407,7 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
   .menu-toggle.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 }
 @media(max-width:860px){
+  .intro-grid{grid-template-columns:1fr;max-width:620px}
   .bio-body{grid-template-columns:1fr}
   /* background-attachment:fixed è rotto su iOS e inutile sul touch —
      l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
