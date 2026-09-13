@@ -53,14 +53,6 @@ h4{font-size:1.2rem}
 h5{font-size:1.05rem}
 h6{font-size:0.95rem}
 
-.eyebrow{
-  font-family:var(--body);
-  font-size:0.68rem;
-  letter-spacing:0.32em;
-  text-transform:uppercase;
-  color:var(--tan);
-  font-weight:500;
-}
 .wrap{max-width:var(--wrap);margin:0 auto;padding:0 clamp(1.4rem,4vw,3.5rem)}
 
 
@@ -344,36 +336,59 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 }
 
 /* ============ 08 · CONTACT ============ */
-/* legacy — riscritto allo step 7 */
-.contact{
-  padding:clamp(4rem,9vw,7rem) 0;
-  background:
-    radial-gradient(90% 120% at 50% 0%, rgba(162,62,43,0.1), transparent 55%),
-    var(--umber);
-  border-top:1px solid var(--hairline);
+/* La pagina /contacts/ dell'archivio ha la stessa impalcatura di about-me e
+   my-last-works: banda parallax col nome della sezione in bianco (30px,
+   letter-spacing 2px) e sotto il blocco dei dati, centrato. Ripresa uguale,
+   meno il form Contact Form 7 che la chiudeva: su GitHub Pages non ha un
+   destinatario.
+
+   La foto della banda NON è quella dell'originale: `20180620_162247.jpg` non
+   è mai stata catturata da Wayback (manca dal CDX l'intera cartella 2018/11)
+   e il sito live risponde 404. Al suo posto `laboratorio-slider-2.jpg`, dalla
+   stessa media library 2018/10 e mai usata altrove: stesso soggetto — il banco
+   di lavoro — dello scatto perduto, che era una foto di laboratorio del
+   giugno 2018. */
+
+.band--contact{
+  background-image:url(../images/laboratorio-slider-2.jpg);
+  /* `center bottom` è la posizione dell'originale. Tiene solo in parte: sotto
+     una certa larghezza la foto (1,625:1) non può più essere ritagliata in
+     verticale — a 390px la banda è alta 270 e larga 390, `cover` la scala
+     sull'altezza e ne mostra tutta l'estensione verticale, fascia chiara
+     compresa. Il ritaglio in basso aiuta solo da ~900px in su.
+     Velo misurato sul reso, non stimato: dietro al titolo la luminanza va da 8
+     a 204 (media 96) a 1440px e da 8 a 206 (media 90) a 390px. Col velo a 0.35
+     il pixel peggiore dava 3,7:1 — basta per i 30px del desktop (testo grande,
+     soglia 3:1) ma non per i 20px sotto i 540px, che di soglia ne vogliono 4,5.
+     A 0.45 il caso peggiore sale a 4,9:1 a entrambe le larghezze. */
+  background-position:center bottom;
+  --band-overlay:0.45;
 }
-.contact .wrap{display:grid;grid-template-columns:1.1fr 0.9fr;gap:clamp(2rem,6vw,5rem);align-items:center}
-.contact .eyebrow{display:block;margin-bottom:1.4rem}
-.contact h2{
-  font-family:var(--display);font-weight:300;font-size:clamp(2.2rem,5vw,3.6rem);
-  line-height:1.05;letter-spacing:-0.01em;margin-bottom:1.6rem;
+.band--contact h2{color:#fff}
+
+.contact{padding-bottom:clamp(3rem,8vw,120px)}
+
+.contact-body{
+  padding-top:clamp(2.5rem,6vw,80px);
+  text-align:center;
 }
-.contact h2 em{font-style:italic;color:var(--gilt)}
-.contact .studio{color:var(--muted);max-width:38ch}
-.contact-card{
-  border:1px solid var(--hairline);border-radius:3px;padding:clamp(1.8rem,3vw,2.6rem);
-  background:rgba(20,16,13,0.4);
+.contact-who{
+  font-family:var(--display);
+  font-size:clamp(1.25rem,2vw,1.5rem);
+  color:var(--heading);
+  margin-bottom:0.6rem;
 }
-.contact-row{padding:1.1rem 0;border-bottom:1px solid var(--hairline)}
-.contact-row:last-child{border-bottom:0;padding-bottom:0}
-.contact-row:first-child{padding-top:0}
-.contact-row .k{
-  font-family:var(--body);font-size:0.64rem;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--muted-dim);margin-bottom:0.35rem;
+.contact-lines{
+  font-style:normal;   /* `address` arriva in corsivo dal default del browser */
+  /* qui l'interlinea 2.27 dell'originale si può tenere per intero: sono
+     quattro righe corte, non un paragrafo — l'aria non affatica la lettura */
+  line-height:2.27;
 }
-.contact-row .v{font-family:var(--display);font-size:1.3rem;color:var(--parchment)}
-.contact-row a.v{transition:color .3s}
-.contact-row a.v:hover{color:var(--gilt)}
+/* i link diventano tan al passaggio, come le voci del menu. Se si vogliono
+   distinguibili già da fermi, è qui che va il filetto:
+   `border-bottom:1px solid var(--rule-strong)` su `.contact-lines a`. */
+.contact-lines a{color:inherit;transition:color .3s}
+.contact-lines a:hover{color:var(--tan)}
 
 /* ============ 09 · FOOTER ============ */
 /* legacy — riscritto allo step 8 */
@@ -388,9 +403,6 @@ footer.site .fmark img{width:20px;opacity:0.7;filter:brightness(1.6) sepia(0.2)}
 footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-transform:uppercase;font-size:0.95rem}
 
 /* ============ 10 · UTILITY & RESPONSIVE ============ */
-.reveal{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease}
-.reveal.in{opacity:1;transform:none}
-
 /* il menu a 7 voci smette di entrare accanto al logo già sotto i 1000px */
 @media(max-width:980px){
   :root{--header-h:68px}
@@ -419,7 +431,6 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
   /* background-attachment:fixed è rotto su iOS e inutile sul touch —
      l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
   .hero,.band{background-attachment:scroll}
-  .contact .wrap{grid-template-columns:1fr;gap:2.6rem}
   .works-grid{columns:2}
 }
 @media(max-width:540px){
@@ -427,7 +438,7 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
 }
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
-  .reveal,.plate{opacity:1!important;transform:none!important;transition:none!important}
+  .plate{opacity:1!important;transform:none!important;transition:none!important}
   .hero,.band{background-attachment:scroll}
   .plate img{transition:none}
 }

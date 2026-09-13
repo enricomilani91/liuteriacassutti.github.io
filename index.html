@@ -196,28 +196,30 @@
   </section>
 
   <!-- CONTACT -->
+  <!-- stesso pattern di bio e works, ed è anche quello che aveva la pagina
+       /contacts/ nell'archivio: banda parallax col nome della sezione, poi il
+       contenuto nel wrap. Testo verbatim (nome, via, città, "cell" + numero) e
+       centrato com'era; l'email sta qui e non solo nel footer perché in
+       monopagina è questo il punto in cui la si cerca.
+       Il form Contact Form 7 che chiudeva la pagina originale è caduto: su
+       GitHub Pages non ha un destinatario, e quattro campi che buttano via il
+       messaggio sono peggio di nessun campo. -->
   <section class="contact" id="contact">
-    <div class="wrap">
-      <div class="reveal">
-        <span class="eyebrow">Get in touch</span>
-        <h2>Come and hear<br>the <em>wood speak</em>.</h2>
-        <p class="studio">The workshop welcomes musicians and collectors — for a new instrument, a restoration, or simply to listen.</p>
-      </div>
-      <div class="contact-card reveal">
-        <div class="contact-row">
-          <div class="k">Email</div>
-          <a class="v" href="mailto:info@liuteriacassutti.it">info@liuteriacassutti.it</a>
-        </div>
-        <div class="contact-row">
-          <div class="k">Telephone</div>
-          <a class="v" href="tel:+393492700290">+39 349 2700290</a>
-        </div>
-        <div class="contact-row">
-          <div class="k">Workshop</div>
-          <div class="v">Via Formis, 5 — 35129 Padova</div>
-        </div>
-      </div>
+
+    <div class="band band--contact">
+      <div class="wrap"><h2>Contacts</h2></div>
     </div>
+
+    <div class="wrap contact-body">
+      <p class="contact-who">Liuteria Cassutti</p>
+      <address class="contact-lines">
+        Via Formis, 5<br>
+        35129 Padova<br>
+        cell <a href="tel:+393492700290">+39 349 2700290</a><br>
+        <a href="mailto:info@liuteriacassutti.it">info@liuteriacassutti.it</a>
+      </address>
+    </div>
+
   </section>
 
 </main>
@@ -247,13 +249,8 @@ document.addEventListener('keydown',(e)=>{
   if(e.key==='Escape'&&menu.classList.contains('open')){setMenu(false);toggle.focus()}
 });
 
-// scroll reveals
-const io=new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
-},{threshold:0.14,rootMargin:'0px 0px -8% 0px'});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-
-// gallery plates stagger
+// rivelazione a scorrimento delle foto della galleria, sfalsata per colonna
+// (l'unico `.reveal` del sito stava nel blocco contatti legacy: caduto con lui)
 const gio=new IntersectionObserver((entries)=>{
   entries.forEach((e)=>{
     if(e.isIntersecting){
