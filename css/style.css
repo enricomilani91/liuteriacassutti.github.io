@@ -233,6 +233,12 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
   background-position:center top;
   background-attachment:fixed;   /* fallback a `scroll` nel banner 10 */
 }
+/* la bio non ha overlay (--band-overlay resta 0 e il titolo è nero); la banda
+   dei lavori ne dichiara uno proprio nel banner 07 */
+.band::before{
+  content:"";position:absolute;inset:0;
+  background:rgba(0,0,0,var(--band-overlay,0));
+}
 .band .wrap{position:relative;width:100%}
 .band h2{
   font-size:clamp(1.25rem,2.6vw,30px);
@@ -259,49 +265,89 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 .bio-prose p + p{margin-top:1.5rem}
 
 /* ============ 07 · WORKS ============ */
-/* legacy — ricolorato allo step 6 */
-.works{padding:clamp(3rem,7vw,5rem) 0}
-.works-head{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;margin-bottom:clamp(2.4rem,5vw,3.6rem);flex-wrap:wrap}
-.works-head .eyebrow{display:block;margin-bottom:0.9rem}
-.works-head h2{font-family:var(--display);font-weight:400;font-size:clamp(2rem,4.5vw,3.2rem);line-height:1}
-.works-head p{color:var(--muted);font-style:italic;max-width:34ch;font-size:1.05rem}
-.grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:clamp(1.4rem,3vw,2.6rem);
+/* Intestazione verbatim dall'archivio: colonne 1/3 + 2/3 (30,67% e 65,33% con
+   4% di gutter) e filetto verticale a destra della prima — nell'originale era
+   un `border-right` della colonna, non una regola del tema.
+   La griglia è a `columns` e non a `grid`: le sei foto tengono la loro
+   proporzione naturale (scelta del committente) e `grid-template-rows:masonry`
+   non è ancora supportato fuori da Firefox. Il prezzo è che l'ordine di
+   lettura scende per colonne invece di correre per righe. */
+
+.band--works{
+  background-image:url(../images/home-strumenti-slider.jpg);
+  /* foto scura (luminanza media 60, massimo 107 nella metà sinistra dove cade
+     il titolo): basta un velo per tenere il bianco leggibile anche quando
+     `background-attachment:fixed` riquadra più in alto su viewport alti */
+  --band-overlay:0.2;
 }
-.plate{position:relative;opacity:0;transform:translateY(26px);transition:opacity .8s ease,transform .8s ease}
+.band--works h2{color:#fff}
+
+.works{padding-bottom:clamp(3rem,8vw,120px)}
+
+.works-head{
+  display:grid;
+  grid-template-columns:minmax(0,30.6666%) 1fr;
+  gap:4%;
+  padding-top:clamp(2.5rem,6vw,80px);
+  padding-bottom:clamp(2.2rem,5vw,60px);
+}
+/* spezzato a mano su tre righe come l'originale: la scala resta sotto la
+   larghezza di colonna, non eredita quella del banner 02 */
+.works-head h2{
+  font-size:clamp(1.6rem,2.6vw,2.1rem);
+  line-height:1.3;
+  border-right:1px solid var(--rule-strong);
+}
+.works-lede{
+  align-self:start;
+  font-size:clamp(1.05rem,1.6vw,1.2rem);
+  line-height:1.7;
+  color:var(--heading);
+}
+
+.works-grid{columns:3;column-gap:15px}
+
+.plate{
+  break-inside:avoid;
+  margin:0 0 15px;
+  opacity:0;transform:translateY(26px);
+  transition:opacity .8s ease,transform .8s ease;
+}
 .plate.in{opacity:1;transform:none}
 .plate .img-wrap{
-  position:relative;overflow:hidden;border-radius:2px;
-  background:var(--umber);border:1px solid var(--hairline);
-  box-shadow:0 30px 60px -35px rgba(0,0,0,0.85);
-}
-.plate .img-wrap::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  box-shadow:inset 0 0 60px 4px rgba(0,0,0,0.35);
-  opacity:0;transition:opacity .5s;
+  position:relative;overflow:hidden;
+  border:1px solid var(--rule);
+  background:var(--paper-alt);
+  /* su fondo bianco l'ombra serve solo a staccare la foto dalla pagina:
+     quella vecchia era tarata su fondo scuro ed era quattro volte più densa */
+  box-shadow:0 18px 40px -32px rgba(36,39,45,0.55);
 }
 .plate img{
-  width:100%;aspect-ratio:3/4;object-fit:cover;
-  filter:brightness(0.92) contrast(1.04) saturate(0.98);
-  transition:transform 1.1s cubic-bezier(.2,.7,.2,1),filter .6s;
+  width:100%;height:auto;
+  transition:transform 1.1s cubic-bezier(.2,.7,.2,1);
 }
-.plate:hover img{transform:scale(1.05);filter:brightness(1.04) contrast(1.06) saturate(1.06)}
-.plate:hover .img-wrap::after{opacity:1}
+/* trattamento dell'hover: zoom lento e nient'altro. Se lo si vuole più
+   marcato, è qui che si interviene (velo scuro, filetto tan, didascalia in
+   overlay) senza toccare il resto della sezione. */
+.plate:hover img{transform:scale(1.04)}
+
 .plate .tag{
-  position:absolute;top:0.9rem;left:0.9rem;z-index:2;
-  font-family:var(--body);font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;
-  padding:0.35rem 0.7rem;border-radius:2px;
-  background:rgba(20,16,13,0.7);backdrop-filter:blur(4px);
-  color:var(--gilt);border:1px solid var(--hairline);
+  position:absolute;top:0;left:0;z-index:2;
+  font-family:var(--body);font-size:0.58rem;font-weight:500;
+  letter-spacing:0.2em;text-transform:uppercase;
+  padding:0.45rem 0.85rem;
+  background:rgba(36,39,45,0.85);
+  color:#fff;
 }
-.plate figcaption{padding-top:1.1rem}
+.plate figcaption{padding-top:0.9rem}
 .plate .title{
-  font-family:var(--display);font-weight:500;font-size:1.32rem;line-height:1.2;color:var(--parchment);
+  font-family:var(--display);font-weight:500;
+  font-size:1.1rem;line-height:1.35;color:var(--heading);
 }
 .plate .meta{
-  font-family:var(--body);font-size:0.66rem;letter-spacing:0.16em;text-transform:uppercase;
-  color:var(--muted-dim);margin-top:0.4rem;
+  font-family:var(--body);font-size:0.62rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--text);margin-top:0.45rem;
 }
 
 /* ============ 08 · CONTACT ============ */
@@ -381,11 +427,13 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
      l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
   .hero,.band{background-attachment:scroll}
   .contact .wrap{grid-template-columns:1fr;gap:2.6rem}
-  .grid{grid-template-columns:repeat(2,1fr)}
+  .works-head{grid-template-columns:1fr;gap:1.6rem}
+  /* impilate, il filetto verticale non separa più nulla */
+  .works-head h2{border-right:0}
+  .works-grid{columns:2}
 }
 @media(max-width:540px){
-  .grid{grid-template-columns:1fr;max-width:360px;margin:0 auto}
-  .works-head{align-items:flex-start}
+  .works-grid{columns:1;max-width:360px;margin:0 auto}
 }
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
