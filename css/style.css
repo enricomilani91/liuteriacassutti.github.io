@@ -265,9 +265,10 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 .bio-prose p + p{margin-top:1.5rem}
 
 /* ============ 07 · WORKS ============ */
-/* Intestazione verbatim dall'archivio: colonne 1/3 + 2/3 (30,67% e 65,33% con
-   4% di gutter) e filetto verticale a destra della prima — nell'originale era
-   un `border-right` della colonna, non una regola del tema.
+/* Il titolo dell'originale ("My last works", spezzato su tre righe in una
+   colonna 1/3 col filetto verticale a destra) è stato accorpato alla banda:
+   ripetuto a due centimetri dal titolo della banda era un doppione. Resta il
+   solo sottotitolo, allineato al bordo del wrap come il titolo sopra di lui.
    La griglia è a `columns` e non a `grid`: le sei foto tengono la loro
    proporzione naturale (scelta del committente) e `grid-template-rows:masonry`
    non è ancora supportato fuori da Firefox. Il prezzo è che l'ordine di
@@ -285,21 +286,13 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 .works{padding-bottom:clamp(3rem,8vw,120px)}
 
 .works-head{
-  display:grid;
-  grid-template-columns:minmax(0,30.6666%) 1fr;
-  gap:4%;
   padding-top:clamp(2.5rem,6vw,80px);
   padding-bottom:clamp(2.2rem,5vw,60px);
 }
-/* spezzato a mano su tre righe come l'originale: la scala resta sotto la
-   larghezza di colonna, non eredita quella del banner 02 */
-.works-head h2{
-  font-size:clamp(1.6rem,2.6vw,2.1rem);
-  line-height:1.3;
-  border-right:1px solid var(--rule-strong);
-}
+/* senza la colonna 1/3 il sottotitolo correrebbe per tutti i 1170px del wrap:
+   un cap sulla misura lo tiene sulle due righe che aveva nell'originale */
 .works-lede{
-  align-self:start;
+  max-width:60ch;
   font-size:clamp(1.05rem,1.6vw,1.2rem);
   line-height:1.7;
   color:var(--heading);
@@ -427,9 +420,6 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
      l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
   .hero,.band{background-attachment:scroll}
   .contact .wrap{grid-template-columns:1fr;gap:2.6rem}
-  .works-head{grid-template-columns:1fr;gap:1.6rem}
-  /* impilate, il filetto verticale non separa più nulla */
-  .works-head h2{border-right:0}
   .works-grid{columns:2}
 }
 @media(max-width:540px){
