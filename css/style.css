@@ -209,7 +209,55 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
   color:var(--muted);max-width:60ch;margin:2rem auto 0;font-style:italic;
 }
 
-/* ============ 06 · BANDS ============ */
+/* ============ 06 · BIO (about me) ============ */
+/* `.band` è la base condivisa con le 5 bande dello step 5: foto fullwidth,
+   parallax senza JS, titolo centrato-a-sinistra nel wrap.
+   L'overlay è una variabile per banda, non un valore unico: le foto hanno
+   luminanze da 59 a 194 e un solo valore o brucia le scure o lascia
+   illeggibili le chiare. `.band--light` = nessun overlay + titolo nero,
+   il caso di chi-sono-slider.jpg (controluce, media 194, centro 247). */
+.band{
+  position:relative;
+  display:flex;align-items:center;
+  min-height:clamp(240px,32vh,340px);
+  padding:clamp(2.5rem,7vw,110px) 0;
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;   /* fallback a `scroll` nel banner 11 */
+}
+.band::before{
+  content:"";position:absolute;inset:0;
+  background:rgba(0,0,0,var(--band-overlay,0.38));
+}
+.band .wrap{position:relative;width:100%}
+.band h2{
+  font-size:clamp(1.25rem,2.6vw,30px);
+  letter-spacing:2px;text-transform:uppercase;
+  color:#fff;
+}
+.band--light{--band-overlay:0}
+.band--light h2{color:#000}
+
+.band--about{background-image:url(../images/chi-sono-slider.jpg)}
+
+.bio-body{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 3fr;
+  gap:clamp(1.6rem,4vw,3rem);
+  padding-top:clamp(2.5rem,6vw,80px);
+  padding-bottom:clamp(3rem,7vw,90px);
+}
+.bio-side h3{line-height:1.2}
+/* nell'originale il truciolo riempie la colonna 1/4 (~270px): sotto i 200px
+   l'ombra morbida pesa più del soggetto */
+.bio-chip{width:100%;max-width:260px;margin-top:clamp(1.2rem,3vw,2.2rem)}
+/* la colonna 3/4 arriva a ~760px: a 16px sono ~95 caratteri per riga.
+   L'originale reggeva la misura lunga con line-height 2.27; qui si tempera
+   da entrambi i lati — un cap morbido e un'interlinea più aria del body. */
+.bio-prose{max-width:70ch;line-height:2.05}
+.bio-prose p + p{margin-top:1.5rem}
+
+/* ============ 07 · BANDS ============ */
 /* legacy (.disciplines) — sostituito dalle bande fullwidth allo step 5 */
 .disciplines{padding:clamp(2rem,5vw,3rem) 0 clamp(3rem,7vw,5rem)}
 .section-head{margin-bottom:clamp(2.4rem,5vw,3.6rem)}
@@ -234,7 +282,7 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
   font-size:0.98rem;color:var(--muted);max-width:46ch;padding-top:0.5rem;
 }
 
-/* ============ 07 · WORKS ============ */
+/* ============ 08 · WORKS ============ */
 /* legacy — ricolorato allo step 6 */
 .works{padding:clamp(3rem,7vw,5rem) 0}
 .works-head{display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;margin-bottom:clamp(2.4rem,5vw,3.6rem);flex-wrap:wrap}
@@ -280,7 +328,7 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
   color:var(--muted-dim);margin-top:0.4rem;
 }
 
-/* ============ 08 · CONTACT ============ */
+/* ============ 09 · CONTACT ============ */
 /* legacy — riscritto allo step 7 */
 .contact{
   padding:clamp(4rem,9vw,7rem) 0;
@@ -312,7 +360,7 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 .contact-row a.v{transition:color .3s}
 .contact-row a.v:hover{color:var(--gilt)}
 
-/* ============ 09 · FOOTER ============ */
+/* ============ 10 · FOOTER ============ */
 /* legacy — riscritto allo step 8 */
 footer.site{padding:2.6rem 0;background:var(--ink);border-top:1px solid var(--hairline)}
 footer.site .wrap{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap}
@@ -324,7 +372,7 @@ footer.site .fmark{display:flex;align-items:center;gap:0.6rem;color:var(--muted)
 footer.site .fmark img{width:20px;opacity:0.7;filter:brightness(1.6) sepia(0.2)}
 footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-transform:uppercase;font-size:0.95rem}
 
-/* ============ 10 · UTILITY & RESPONSIVE ============ */
+/* ============ 11 · UTILITY & RESPONSIVE ============ */
 .reveal{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease}
 .reveal.in{opacity:1;transform:none}
 
@@ -351,9 +399,10 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
   .menu-toggle.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 }
 @media(max-width:860px){
+  .bio-body{grid-template-columns:1fr}
   /* background-attachment:fixed è rotto su iOS e inutile sul touch —
      l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
-  .hero{background-attachment:scroll}
+  .hero,.band{background-attachment:scroll}
   .contact .wrap{grid-template-columns:1fr;gap:2.6rem}
   .grid{grid-template-columns:repeat(2,1fr)}
 }
@@ -366,6 +415,6 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
   .reveal,.plate{opacity:1!important;transform:none!important;transition:none!important}
-  .hero{background-attachment:scroll}
+  .hero,.band{background-attachment:scroll}
   .plate img{transition:none}
 }
