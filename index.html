@@ -381,28 +381,44 @@ document.addEventListener('keydown',(e)=>{
 // L'hero occupa tutto il viewport e l'header gli sta sopra, fuori dal flusso e
 // nascosto: è questo blocco a farlo scendere, aggiungendogli `.show`.
 const header=document.querySelector('header.nav');
+const hero=document.querySelector('.hero');
 
-// TODO — politica di comparsa dell'header.
-//   `y`     = posizione di scroll corrente
-//   `prevY` = posizione all'ultimo tick (negativo = si sta risalendo)
-// Ritorna true se l'header va mostrato. Il valore qui sotto è solo una base
-// funzionante: mostra l'header dopo il 60% della prima schermata.
-function shouldShowHeader(y,prevY){
-  return y > innerHeight * 0.6;
+// Quota oltre la quale l'header compare: l'altezza dell'hero **meno** quella
+// dell'header. Non l'altezza piena dell'hero, perché è esattamente lì che
+// atterra l'ancora `#home` (lo `scroll-margin-top` delle sezioni vale un
+// header): un confine un pixel più in alto terrebbe l'header di sopra proprio
+// all'arrivo della prima voce di menu.
+// L'hero si misura da `offsetHeight` e non da `innerHeight` perché ha un
+// `min-height:420px`: sui viewport molto bassi è più alto della finestra.
+// Le misure si prendono una volta e si rinfrescano al resize — leggerle a ogni
+// frame obbligherebbe il browser a ricalcolare il layout durante lo scroll.
+let floor=0;
+const measure=()=>{floor=hero.offsetHeight-header.offsetHeight};
+measure();
+
+// Politica di comparsa: l'header entra quando l'hero ha finito di scorrere e da
+// lì resta giù. Monotòna di proposito — l'auto-hide (compare risalendo, si
+// ritira scendendo) è stato provato e scartato.
+function shouldShowHeader(y){
+  return y>=floor;
 }
 
-let prevY=scrollY,ticking=false;
+let ticking=false;
 const syncHeader=()=>{
-  const y=scrollY;
+  ticking=false;
+  // l'overscroll elastico manda `scrollY` sotto zero: senza il clamp il
+  // rimbalzo in cima si leggerebbe come una posizione negativa
+  const y=Math.max(0,scrollY);
   // il drawer aperto tiene l'header giù comunque: nasconderglielo sotto
   // porterebbe via anche la X per richiuderlo
-  header.classList.toggle('show',shouldShowHeader(y,prevY)||menu.classList.contains('open'));
-  prevY=y;ticking=false;
+  header.classList.toggle('show',shouldShowHeader(y)||menu.classList.contains('open'));
 };
 // lo scroll arriva a raffica: un solo ricalcolo per frame
 addEventListener('scroll',()=>{
   if(!ticking){ticking=true;requestAnimationFrame(syncHeader)}
 },{passive:true});
+// il resize cambia l'altezza dell'hero, e con essa la quota di comparsa
+addEventListener('resize',()=>{measure();syncHeader()},{passive:true});
 // al caricamento su un'ancora (`/#contact`) la pagina parte già scrollata:
 // l'header deve essere subito al posto giusto, senza aspettare uno scroll
 syncHeader();
