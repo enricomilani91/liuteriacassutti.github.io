@@ -573,38 +573,25 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
    le regole risolvevano a nulla e il footer rendeva su fondo bianco con il
    testo del body. Qui rientra nella palette vera.
 
-   Due livelli, come l'originale: area contatti su `--charcoal` chiusa in alto
-   dal filetto tan da 12px (è la firma visiva del footer di partenza — l'unico
-   punto del sito dove l'accento prende tanto spazio, e l'unico stacco possibile
-   fra il bianco della sezione contatti e il chrome scuro), poi la barra
-   copyright su `--charcoal-2`, un gradino più chiara. */
-footer.site{border-top:12px solid var(--tan)}
+   Due livelli: il marchio centrato su `--charcoal`, poi la barra copyright su
+   `--charcoal-2`, un gradino più chiara. Il filetto tan da 12px che chiudeva
+   in alto è caduto — lo stacco fra il bianco della sezione contatti e il
+   chrome scuro regge da solo. */
 
 .fmain{background:var(--charcoal);padding:clamp(2.4rem,5vw,3.4rem) 0}
-.fmain .wrap{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:clamp(1.8rem,4vw,3rem);flex-wrap:wrap;
-}
+/* una colonna sola, quindi il marchio si centra e basta: il flex con
+   space-between serviva quando accanto c'era la lista contatti */
+.fmain .wrap{display:flex;justify-content:center}
 /* Il logo completo fornito dal committente è tratto nero su fondo bianco: sul
    charcoal sarebbe invisibile. In `images/` sta come PNG bianco su trasparente
    (alfa = 255 - luminanza, così l'antialiasing dell'incisione resta morbido
    invece di ritagliarsi a scalini) a 640px, il doppio della resa massima. */
 .fmark{width:clamp(210px,26vw,320px);height:auto;opacity:0.92}
 
-.freach{list-style:none;display:grid;gap:0.8rem}
-.freach li{display:flex;align-items:center;gap:0.75rem;color:#fff;font-size:0.875rem}
-.freach svg{
-  width:18px;height:18px;flex:none;
-  fill:none;stroke:var(--tan);stroke-width:1.4;
-  stroke-linecap:round;stroke-linejoin:round;
-}
-.freach svg .dot{fill:var(--tan);stroke:none}
-.freach a{transition:color .3s}
-.freach a:hover,.freach a:focus-visible{color:var(--tan)}
-
 .flegal{background:var(--charcoal-2);padding:1.1rem 0}
 .flegal p{
   font-size:0.68rem;letter-spacing:0.04em;line-height:1.7;
+  text-align:center;
   /* niente cap di misura: e' una riga sola di dati legali, non un paragrafo
      da leggere — spezzarla a 70ch la mandava a capo dopo "P.IVA" */
   color:rgba(255,255,255,0.45);
@@ -648,13 +635,6 @@ footer.site{border-top:12px solid var(--tan)}
    (sotto i 150px di larghezza): le foto vanno una sopra l'altra, a piena
    colonna, e la galleria smette di essere giustificata */
 @media(max-width:640px){
-  /* impilato, il footer si centra come il blocco contatti che ha sopra:
-     allineato a sinistra su una colonna sola resterebbe sbilenco */
-  .fmain .wrap{justify-content:center}
-  /* la colonna si centra intera, non riga per riga: centrando i singoli <li>
-     le due icone finivano su due verticali diverse (i testi sono di lunghezza
-     diversa) e la colonna si sfrangiava */
-  .freach{width:max-content;margin-inline:auto}
   .shots{display:block;max-width:420px;margin:0 auto}
   .shot{max-width:none}
   .shot + .shot{margin-top:15px}
