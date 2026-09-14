@@ -201,87 +201,65 @@
 
   </section>
 
-  <!-- WORKS -->
-  <!-- stesso pattern della bio: banda parallax fullwidth col nome della
-       sezione, poi il contenuto nel wrap. L'h2 "My last works" dell'originale
-       vive nella banda (lo spezzato su tre righe in colonna 1/3, col filetto
-       verticale, era un doppione: tolto su richiesta del committente); resta
-       il sottotitolo in corsivo, verbatim come i titoli delle schede. -->
-  <section class="works" id="works">
+  <!-- RESTORATION -->
+  <!-- Sezione nuova: il menu la linkava già (`#restoration`) ma non esisteva.
+       Prende il posto di "My last works", cancellata su richiesta del committente,
+       e ne eredita la posizione fra new instruments e i contatti.
+       Struttura a due tempi: prima la prosa sul pattern `1fr 3fr` di bio e
+       workshop — sottotitolo in corsivo nella colonna stretta, testo in quella
+       larga — poi la stessa galleria giustificata di new instruments.
+       Il sottotitolo fornito era "Restoration: Between History and Innovation":
+       la prima parola è caduta perché il titolo della banda la dice già due
+       centimetri sopra, come s’era deciso per il doppione di "My last works". -->
+  <section class="restoration" id="restoration">
 
-    <div class="band band--works">
-      <div class="wrap"><h2>My last works</h2></div>
+    <div class="band band--restoration">
+      <div class="wrap"><h2>Restoration</h2></div>
     </div>
 
-    <div class="wrap works-head">
-      <p class="works-lede"><em>The latest creations, they are fruit of love, time, instinct and naturalness.</em></p>
+    <div class="wrap resto-body">
+      <div class="resto-side">
+        <h3>Between<br>History<br>and Innovation</h3>
+      </div>
+      <div class="resto-prose">
+        <p>The deep fascination of restoration lies, for me, in an extraordinary
+          contrast: the noble antiquity of the instrument I hold in my hands and the
+          modernity of the techniques and materials I use today to care for it.</p>
+        <p>I approach every restoration with the utmost respect and one absolute
+          priority: preserving the instrument&#8217;s originality. Working on a piece
+          from the past means safeguarding its history, preserving every single
+          acoustic and aesthetic detail conceived by its maker.</p>
+        <p>To do this, I combine artisanal care with innovative methods including the
+          use of micro-computed tomography, three-dimensional scanning and computer
+          numerical control (CNC) machines. This approach is the result of a path of
+          continuous advanced training and constant, valuable dialogue with esteemed
+          international colleagues, allowing me to guarantee the utmost precision in
+          every intervention, in full respect of the original material.</p>
+      </div>
     </div>
 
+    <!-- stesse regole `.shots`/`.shot` di new instruments: nessuna didascalia,
+         solo l’alt. L’ordine è calibrato sul wrap del flex perché le righe escano
+         da 3, 3, 3 e 2 foto, e tiene insieme per riga i passaggi affini (la
+         scansione con la fresa, i calchi fra loro). Se si aggiunge o si toglie
+         uno scatto le righe sotto si ricompongono: va ricontrollato a schermo. -->
     <div class="wrap">
-      <div class="works-grid">
+      <div class="shots">
 
-        <figure class="plate">
-          <div class="img-wrap">
-            <span class="tag">Restoration</span>
-            <img src="images/Goffriler-3-web-400x533.jpg" width="400" height="533" loading="lazy" alt="Violin by Matteo Goffriller, Venice 1730, during restoration">
-          </div>
-          <figcaption>
-            <div class="title">Violin Matteo Goffriller</div>
-            <div class="meta">Venice · 1730</div>
-          </figcaption>
-        </figure>
+        <figure class="shot" style="--r:1.333"><img src="images/restauro-filetto-crepa.jpg" width="1200" height="900" loading="lazy" alt="Crack in a flamed maple back closed with a fitted sliver of wood"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/restauro-frammenti.jpg" width="800" height="1200" loading="lazy" alt="Fragments of a broken violin laid out before reassembly"></figure>
+        <figure class="shot" style="--r:1.504"><img src="images/restauro-bordo-tavola.jpg" width="1200" height="798" loading="lazy" alt="Edge work on the bare arching of a top"></figure>
 
-        <figure class="plate">
-          <div class="img-wrap">
-            <span class="tag">Restoration</span>
-            <img src="images/Dalla-Vecchai-5-web-400x650.jpg" width="400" height="650" loading="lazy" alt="Violin attributed to Andrea Guarneri, front view">
-          </div>
-          <figcaption>
-            <div class="title">Violin attributed to Andrea Guarneri</div>
-          </figcaption>
-        </figure>
+        <figure class="shot" style="--r:1.334"><img src="images/restauro-scansione-3d.jpg" width="1200" height="900" loading="lazy" alt="Three-dimensional scan of a plate on the workshop computer"></figure>
+        <figure class="shot" style="--r:1.333"><img src="images/restauro-cnc.jpg" width="1200" height="900" loading="lazy" alt="Computer numerical control machine carving a copy of a plate"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/restauro-fondo-morsetti.jpg" width="800" height="1200" loading="lazy" alt="Old back held by clamps along a glued crack"></figure>
 
-        <figure class="plate">
-          <div class="img-wrap">
-            <span class="tag">Restoration</span>
-            <img src="images/Anese-1-web-400x598.jpg" width="400" height="598" loading="lazy" alt="Violin from Postiglione&#8217;s school, Naples">
-          </div>
-          <figcaption>
-            <div class="title">Violin Postiglione&#8217;s School</div>
-            <div class="meta">Naples</div>
-          </figcaption>
-        </figure>
+        <figure class="shot" style="--r:1.333"><img src="images/restauro-calchi-gesso.jpg" width="1200" height="900" loading="lazy" alt="Plaster casts of the plates beside the instrument under repair"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/restauro-tasselli-interno.jpg" width="800" height="1200" loading="lazy" alt="Cleats along a repaired crack inside a top"></figure>
+        <figure class="shot" style="--r:1.333"><img src="images/restauro-forma-gesso.jpg" width="1200" height="900" loading="lazy" alt="Inside of an old top supported in its plaster cast"></figure>
 
-        <figure class="plate">
-          <div class="img-wrap">
-            <span class="tag">Restoration</span>
-            <img src="images/De-Barbieri-3-web-1-400x419.jpg" width="400" height="419" loading="lazy" alt="Violin by Paolo De Barbieri, Genoa 1920, scroll detail">
-          </div>
-          <figcaption>
-            <div class="title">Violin Paolo De Barbieri</div>
-            <div class="meta">Genoa · 1920</div>
-          </figcaption>
-        </figure>
-
-        <figure class="plate">
-          <div class="img-wrap">
-            <span class="tag">Restoration</span>
-            <img src="images/Cello-Coin-6-web-400x598.jpg" width="400" height="598" loading="lazy" alt="Cello from Grancino&#8217;s school">
-          </div>
-          <figcaption>
-            <div class="title">Grancino&#8217;s School Cello</div>
-          </figcaption>
-        </figure>
-
-        <figure class="plate">
-          <div class="img-wrap">
-            <span class="tag">New instruments</span>
-            <img src="images/guarnieri-antico-1-web-400x600.jpg" width="400" height="600" loading="lazy" alt="Violin built by Alberto Cassutti in 2018, the &#8220;Copenaghen&#8221;">
-          </div>
-          <figcaption>
-            <div class="title">Violin Alberto Cassutti 2018 &#8220;Copenaghen&#8221;</div>
-          </figcaption>
-        </figure>
+        <figure class="shot" style="--r:1.333"><img src="images/restauro-boccole-cavigliera.jpg" width="1200" height="900" loading="lazy" alt="New bushings fitted in the pegbox of a violin"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/restauro-morsetto-tassello.jpg" width="800" height="1200" loading="lazy" alt="Clamp holding a cleat while the glue sets"></figure>
 
       </div>
     </div>
@@ -289,7 +267,7 @@
   </section>
 
   <!-- CONTACT -->
-  <!-- stesso pattern di bio e works, ed è anche quello che aveva la pagina
+  <!-- stesso pattern di bio e restoration, ed è anche quello che aveva la pagina
        /contacts/ nell'archivio: banda parallax col nome della sezione, poi il
        contenuto nel wrap. Testo verbatim (nome, via, città, "cell" + numero) e
        centrato com'era; l'email sta qui e non solo nel footer perché in
@@ -342,7 +320,8 @@ document.addEventListener('keydown',(e)=>{
   if(e.key==='Escape'&&menu.classList.contains('open')){setMenu(false);toggle.focus()}
 });
 
-// rivelazione a scorrimento delle foto delle due gallerie, sfalsata per colonna
+// rivelazione a scorrimento delle foto delle due gallerie — new instruments e
+// restoration, stesso componente `.shot` — sfalsata per colonna
 // (l'unico `.reveal` del sito stava nel blocco contatti legacy: caduto con lui)
 const gio=new IntersectionObserver((entries)=>{
   entries.forEach((e)=>{
@@ -353,7 +332,7 @@ const gio=new IntersectionObserver((entries)=>{
     }
   });
 },{threshold:0.12});
-document.querySelectorAll('.plate,.shot').forEach(el=>gio.observe(el));
+document.querySelectorAll('.shot').forEach(el=>gio.observe(el));
 
 </script>
 </body>

@@ -348,9 +348,11 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
    larghezze finali restano proporzionali ai rapporti, quindi tutte le foto
    della riga hanno la stessa altezza: le righe sono allineate in alto e in
    basso come in una griglia, ma quante foto ci stiano lo decide il wrap del
-   flex — 3, 3, 2, 3, 4 con l'ordine attuale. È il contrario di `.works-grid`
-   (`columns`), che allinea le colonne e lascia le righe libere: là servivano
-   le didascalie sotto ogni foto, qui l'occhio deve poter correre per righe.
+   flex — 3, 3, 2, 3, 4 con l'ordine attuale. L'alternativa scartata era
+   `columns` (allinea le colonne e lascia le righe libere, come faceva la
+   galleria di "My last works"): va bene quando sotto ogni foto c'è una
+   didascalia, non qui, dove l'occhio deve poter correre per righe.
+   Le stesse regole servono anche la galleria di restoration.
    Nessuna foto viene ritagliata: il rapporto in `--r` è quello dello scatto. */
 
 .band--instruments{
@@ -382,7 +384,7 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
   /* solo l'ultima riga può restare corta: centrarla evita la coda ragged */
   justify-content:center;
   align-items:stretch;
-  gap:15px;   /* lo stesso passo della galleria works */
+  gap:15px;   /* lo stesso passo che aveva la galleria di "My last works" */
   padding-top:clamp(2.5rem,6vw,80px);
 }
 .shot{
@@ -413,84 +415,61 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 }
 .shot:hover img{transform:scale(1.04)}
 
-/* ============ 07 · WORKS ============ */
-/* Il titolo dell'originale ("My last works", spezzato su tre righe in una
-   colonna 1/3 col filetto verticale a destra) è stato accorpato alla banda:
-   ripetuto a due centimetri dal titolo della banda era un doppione. Resta il
-   solo sottotitolo, allineato al bordo del wrap come il titolo sopra di lui.
-   La griglia è a `columns` e non a `grid`: le sei foto tengono la loro
-   proporzione naturale (scelta del committente) e `grid-template-rows:masonry`
-   non è ancora supportato fuori da Firefox. Il prezzo è che l'ordine di
-   lettura scende per colonne invece di correre per righe. */
+/* ============ 07 · RESTORATION ============ */
+/* Sezione nuova, al posto di "My last works". Nessun componente nuovo: la prosa
+   riusa la griglia `1fr 3fr` di bio e workshop, la galleria riusa `.shots`/
+   `.shot` di new instruments senza una sola regola in più. */
 
-.band--works{
-  background-image:url(../images/home-strumenti-slider.jpg);
-  /* foto scura (luminanza media 60, massimo 107 nella metà sinistra dove cade
-     il titolo): basta un velo per tenere il bianco leggibile anche quando
-     `background-attachment:fixed` riquadra più in alto su viewport alti */
-  --band-overlay:0.2;
+.band--restoration{
+  background-image:url(../images/restauro-fascia.jpg);
+  /* Terza banda difficile, e l'unica risolta in esportazione invece che in CSS.
+     La foto (il banco delle vernici) ha dietro una finestra in controluce che a
+     piena risoluzione tocca luminanza 0.996 su tutta la larghezza: né un velo
+     uniforme né un gradiente orizzontale come quelli di workshop e new
+     instruments possono salvarla, perché il punto bruciato cade dietro al
+     titolo a qualunque ritaglio. Per portare il bianco ad AA sarebbe servito un
+     velo 0.82, cioè spegnere la foto.
+     Siccome quelle alte luci sono bruciate e non contengono dettaglio,
+     `restauro-fascia.jpg` è esportata con un ginocchio: sotto 0.55 sRGB la foto
+     è intatta, sopra le luci sono compresse su un tetto di 0.62. Il massimo di
+     luminanza scende da 0.996 a 0.341 e la finestra diventa un grigio chiaro
+     invece di un buco bianco.
+     Con quel file basta il velo uniforme: misurato col modello severo del
+     parallax (background-attachment:fixed riquadra sul viewport, scorrendo
+     qualunque fascia può finire dietro al titolo) a 1440/1170/900/600/390px il
+     caso peggiore è 4,76:1 — sopra AA, come il workshop a 4,86:1.
+     ATTENZIONE: se si sostituisce la foto va rifatto il ginocchio, altrimenti
+     il velo da solo non basta. L'originale sta in materiali_cassutti. */
+  --band-overlay:0.5;
 }
-.band--works h2{color:#fff}
+.band--restoration h2{color:#fff}
 
-.works{padding-bottom:clamp(3rem,8vw,120px)}
+.restoration{padding-bottom:clamp(3rem,8vw,120px)}
 
-.works-head{
+/* stessa proporzione di `.bio-body` e `.shop-item`, non una nuova: la colonna
+   di prosa cade sulla verticale della bio e del workshop, e le tre sezioni si
+   leggono come un blocco solo */
+.resto-body{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 3fr;
+  gap:clamp(1.6rem,4vw,3rem);
   padding-top:clamp(2.5rem,6vw,80px);
-  padding-bottom:clamp(2.2rem,5vw,60px);
 }
-/* senza la colonna 1/3 il sottotitolo correrebbe per tutti i 1170px del wrap:
-   un cap sulla misura lo tiene sulle due righe che aveva nell'originale */
-.works-lede{
-  max-width:60ch;
-  font-size:clamp(1.05rem,1.6vw,1.2rem);
-  line-height:1.7;
-  color:var(--heading);
+/* corsivo col filetto tan: la stessa firma dei titoli di servizio del workshop.
+   Qui però è il sottotitolo della sezione, uno solo, non una riga di listino. */
+.resto-side h3{
+  font-style:italic;
+  font-weight:400;      /* come .shop-item h3: il corsivo di Playfair a 500 impasta le grazie */
+  line-height:1.3;
 }
-
-.works-grid{columns:3;column-gap:15px}
-
-.plate{
-  break-inside:avoid;
-  margin:0 0 15px;
-  opacity:0;transform:translateY(26px);
-  transition:opacity .8s ease,transform .8s ease;
+.resto-side h3::after{
+  content:"";display:block;
+  width:34px;height:1px;background:var(--tan);
+  margin-top:clamp(0.7rem,1.5vw,1rem);
 }
-.plate.in{opacity:1;transform:none}
-.plate .img-wrap{
-  position:relative;overflow:hidden;
-  border:1px solid var(--rule);
-  background:var(--paper-alt);
-  /* su fondo bianco l'ombra serve solo a staccare la foto dalla pagina:
-     quella vecchia era tarata su fondo scuro ed era quattro volte più densa */
-  box-shadow:0 18px 40px -32px rgba(36,39,45,0.55);
-}
-.plate img{
-  width:100%;height:auto;
-  transition:transform 1.1s cubic-bezier(.2,.7,.2,1);
-}
-/* trattamento dell'hover: zoom lento e nient'altro. Se lo si vuole più
-   marcato, è qui che si interviene (velo scuro, filetto tan, didascalia in
-   overlay) senza toccare il resto della sezione. */
-.plate:hover img{transform:scale(1.04)}
-
-.plate .tag{
-  position:absolute;top:0;left:0;z-index:2;
-  font-family:var(--body);font-size:0.58rem;font-weight:500;
-  letter-spacing:0.2em;text-transform:uppercase;
-  padding:0.45rem 0.85rem;
-  background:rgba(36,39,45,0.85);
-  color:#fff;
-}
-.plate figcaption{padding-top:0.9rem}
-.plate .title{
-  font-family:var(--display);font-weight:500;
-  font-size:1.1rem;line-height:1.35;color:var(--heading);
-}
-.plate .meta{
-  font-family:var(--body);font-size:0.62rem;
-  letter-spacing:0.18em;text-transform:uppercase;
-  color:var(--text);margin-top:0.45rem;
-}
+/* stessa misura e stessa interlinea della prosa della bio e del workshop */
+.resto-prose{max-width:70ch;line-height:2.05}
+.resto-prose p + p{margin-top:1.5rem}
 
 /* ============ 08 · CONTACT ============ */
 /* La pagina /contacts/ dell'archivio ha la stessa impalcatura di about-me e
@@ -585,13 +564,13 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
 @media(max-width:860px){
   .intro-grid{grid-template-columns:1fr;max-width:620px}
   .bio-body{grid-template-columns:1fr}
+  .resto-body{grid-template-columns:1fr}
   /* impilate, le righe del listino hanno bisogno di meno aria fra titolo e
      testo di quanta ne serva fra due colonne */
   .shop-item{grid-template-columns:1fr;gap:clamp(0.9rem,2.5vw,1.2rem)}
   /* background-attachment:fixed è rotto su iOS e inutile sul touch —
      l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
   .hero,.band{background-attachment:scroll}
-  .works-grid{columns:2}
 }
 /* sotto i 640px una riga da due sacrifica troppo il lato corto delle verticali
    (sotto i 150px di larghezza): le foto vanno una sopra l'altra, a piena
@@ -601,12 +580,9 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
   .shot{max-width:none}
   .shot + .shot{margin-top:15px}
 }
-@media(max-width:540px){
-  .works-grid{columns:1;max-width:360px;margin:0 auto}
-}
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
-  .plate,.shot{opacity:1!important;transform:none!important;transition:none!important}
+  .shot{opacity:1!important;transform:none!important;transition:none!important}
   .hero,.band{background-attachment:scroll}
-  .plate img,.shot img{transition:none}
+  .shot img{transition:none}
 }
