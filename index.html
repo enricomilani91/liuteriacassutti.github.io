@@ -377,80 +377,35 @@ document.addEventListener('keydown',(e)=>{
   if(e.key==='Escape'&&menu.classList.contains('open')){setMenu(false);toggle.focus()}
 });
 
-// ---- header a comparsa (auto-hide) ----------------------------------------
+// ---- header a comparsa ----------------------------------------------------
 // L'hero occupa tutto il viewport e l'header gli sta sopra, fuori dal flusso e
 // nascosto: è questo blocco a farlo scendere, aggiungendogli `.show`.
 const header=document.querySelector('header.nav');
-const hero=document.querySelector('.hero');
 
-// Confine sotto cui l'header non deve mai comparire. Non è l'altezza
-// dell'hero ma quella **meno l'header**: è esattamente la quota a cui atterra
-// l'ancora `#home` (lo `scroll-margin-top` delle sezioni vale un header), e
-// mettere il confine un pixel più in su lo lascerebbe fuori proprio lì.
-// L'hero si misura da `offsetHeight` e non da `innerHeight` perché ha un
-// `min-height:420px`: sui viewport molto bassi è più alto della finestra.
-// Le due misure si prendono una volta e si rinfrescano al resize — leggerle a
-// ogni frame obbligherebbe il browser a ricalcolare il layout durante lo scroll.
-let floor=0;
-const measure=()=>{floor=hero.offsetHeight-header.offsetHeight};
-measure();
-
-// sotto questo scarto il movimento non conta: senza zona morta il tremolio di
-// un trackpad (o l'assestamento di uno scroll inerziale) alterna su e giù di
-// un pixel e l'header sfarfalla
-const DEAD_ZONE=6;
-
-// Politica di comparsa dell'header: auto-hide.
+// TODO — politica di comparsa dell'header.
 //   `y`     = posizione di scroll corrente
-//   `prevY` = posizione all'ultima decisione presa
-// Ritorna true (mostra), false (nascondi) oppure null = "lascia com'è".
+//   `prevY` = posizione all'ultimo tick (negativo = si sta risalendo)
+// Ritorna true se l'header va mostrato. Il valore qui sotto è solo una base
+// funzionante: mostra l'header dopo il 60% della prima schermata.
 function shouldShowHeader(y,prevY){
-  if(y<floor) return false;            // ancora sull'hero: l'header non esiste
-  const d=y-prevY;
-  if(Math.abs(d)<DEAD_ZONE) return null;
-  return d<0;                          // si risale → compare; si scende → si ritira
+  return y > innerHeight * 0.6;
 }
-
-// Un clic su un'ancora interna (menu, stemma, freccia dell'hero, skip-link)
-// porta quasi sempre più in basso: l'auto-hide leggerebbe quello scroll come
-// "sta scendendo" e si ritirerebbe proprio mentre la sezione atterra. E senza
-// header i 90px di `scroll-margin-top` delle ancore non coprono più nulla:
-// al posto suo si vedrebbe la coda della sezione precedente. Per la durata
-// dello scroll morbido l'header resta quindi inchiodato giù.
-let pinnedUntil=0;
-const pin=(ms)=>{pinnedUntil=performance.now()+ms;header.classList.add('show')};
-document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',()=>pin(1000)));
 
 let prevY=scrollY,ticking=false;
 const syncHeader=()=>{
-  ticking=false;
-  // l'overscroll elastico manda `scrollY` sotto zero (e oltre il fondo): senza
-  // il clamp il rimbalzo di fine pagina si legge come un cambio di direzione
-  const y=Math.max(0,scrollY);
-  if(performance.now()<pinnedUntil){prevY=y;return}
+  const y=scrollY;
   // il drawer aperto tiene l'header giù comunque: nasconderglielo sotto
   // porterebbe via anche la X per richiuderlo
-  const want=menu.classList.contains('open')?true:shouldShowHeader(y,prevY);
-  if(want===null) return;   // scarto sotto la zona morta: `prevY` resta fermo,
-                            // così uno scroll lento arriva comunque ad accumularlo
-  header.classList.toggle('show',want);
-  prevY=y;
+  header.classList.toggle('show',shouldShowHeader(y,prevY)||menu.classList.contains('open'));
+  prevY=y;ticking=false;
 };
 // lo scroll arriva a raffica: un solo ricalcolo per frame
 addEventListener('scroll',()=>{
   if(!ticking){ticking=true;requestAnimationFrame(syncHeader)}
 },{passive:true});
-addEventListener('resize',()=>{measure();prevY=Math.max(0,scrollY)},{passive:true});
-
-// Ingresso diretto su un'ancora (`/#contact`). Qui `scrollY` è ancora 0: con
-// `scroll-behavior:smooth` la navigazione al frammento non è istantanea, parte
-// dopo il parsing e **scende** — l'auto-hide la leggerebbe come una discesa e
-// terrebbe l'header di sopra proprio all'arrivo. È lo stesso caso del clic su
-// una voce di menu, quindi usa lo stesso fermo, un po' più lungo perché da qui
-// il percorso può essere tutta la pagina. (Se lo scorrimento durasse più di
-// 1,2s l'header tornerebbe a nascondersi: su questa pagina non succede.)
-if(location.hash) pin(1200);
-else header.classList.toggle('show',Math.max(0,scrollY)>=floor);
+// al caricamento su un'ancora (`/#contact`) la pagina parte già scrollata:
+// l'header deve essere subito al posto giusto, senza aspettare uno scroll
+syncHeader();
 
 // rivelazione a scorrimento delle foto delle due gallerie — new instruments e
 // restoration, stesso componente `.shot` — sfalsata per colonna
