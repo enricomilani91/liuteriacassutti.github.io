@@ -281,7 +281,10 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
   min-height:clamp(240px,32vh,340px);
   padding:clamp(2.5rem,7vw,110px) 0;
   background-size:cover;
-  background-position:center top;
+  /* su custom property perché è l'unica famiglia di proprietà che i
+     pseudo-elementi ereditano: il layer parallax del banner 10 la rilegge */
+  --band-pos:center top;
+  background-position:var(--band-pos);
   background-attachment:fixed;   /* fallback a `scroll` nel banner 10 */
 }
 /* la bio non ha overlay (--band-overlay resta 0 e il titolo è nero); le altre
@@ -558,7 +561,7 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
   /* `center bottom` è la posizione dell'originale, e qui è anche quella giusta:
      dove il ritaglio verticale morde, a cadere è il cielo e non i due che
      camminano, che stanno nella metà bassa. */
-  background-position:center bottom;
+  --band-pos:center bottom;
   /* Rimisurato sul file con la spalla, stesso modello severo del parallax (il
      pixel più chiaro dell'intera colonna su cui cade l'h2) a 1440/1170/900/600/
      390px: caso peggiore 4,95:1, media da 7,0 a 9,3:1. Sopra la soglia AA a
@@ -683,8 +686,62 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
      testo di quanta ne serva fra due colonne */
   .shop-item{grid-template-columns:1fr;gap:clamp(0.9rem,2.5vw,1.2rem)}
   /* background-attachment:fixed è rotto su iOS e inutile sul touch —
-     l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
+     l'originale disattivava il parallax sotto i 920px, noi sotto 860.
+     L'hero resta fermo; le bande riprendono il parallax poco sotto, con un
+     meccanismo che sul touch regge. */
   .hero,.band{background-attachment:scroll}
+
+  /* Parallax delle bande sul mobile, senza JS e senza `fixed`.
+     `fixed` ancora lo sfondo al viewport e obbliga a ridipingere l'area
+     visibile a ogni frame: su iOS è proprio l'implementazione a essere rotta
+     (l'immagine si blocca e scatta a fine scroll), su Android il collasso
+     della barra indirizzi cambia l'altezza del viewport e fa saltare il
+     ritaglio. Qui invece la foto passa su un layer che è più alto della banda
+     e trasla in `transform`: gira sul compositor, senza ridisegni.
+     Il moto lo dà `animation-timeline:view()` — la timeline avanza da quando
+     la banda entra nella finestra a quando ne esce, quindi niente listener di
+     scroll. Chi non la supporta (iOS ≤ 18, Firefox datati) non entra nella
+     @supports e vede la banda ferma esattamente com'è oggi. */
+  @supports (animation-timeline: view()){
+    /* `clip` e non `hidden`: `overflow:hidden` crea uno scroll container, e
+       allora `view()` aggancerebbe la timeline alla banda stessa — che non
+       scorre mai — invece che al documento, lasciando il layer immobile.
+       `overflow:clip` ritaglia senza rendere scrollabile nulla.
+       `isolation` tiene gli z-index qui sotto dentro la banda.
+       `--par` è mezza corsa del parallax, ed è l'unica manopola: in `vh` e non
+       in %, così l'ampiezza non dipende dall'altezza del layer ed è un numero
+       leggibile — 14vh su uno schermo da 844px sono ~118px per lato, 236px di
+       corsa contro i ~1114px di scroll che la banda impiega ad attraversare la
+       finestra (coefficiente ~0,21). `vh` e non `svh`: è il viewport grande,
+       che non cambia quando la barra indirizzi si ritrae, quindi la corsa
+       resta stabile durante lo scroll. */
+    .band{overflow:clip;isolation:isolate;--par:14vh}
+    /* il layer copre la foto della banda, il velo deve restargli sopra e il
+       titolo sopra a entrambi: senza z-index espliciti ::after vincerebbe su
+       ::before, che lo precede nell'albero */
+    .band::after{
+      content:"";position:absolute;z-index:0;
+      /* il gioco verticale è esattamente la corsa, più 4px di margine perché
+         agli estremi il bordo del layer non affiori per arrotondamenti */
+      inset:calc(-1 * var(--par) - 4px) 0;
+      background-image:inherit;
+      background-size:cover;
+      background-position:var(--band-pos);
+      /* longhand e non shorthand: `animation` azzera `animation-timeline` */
+      animation-name:band-shift;
+      animation-timing-function:linear;
+      animation-fill-mode:both;
+      animation-timeline:view();
+    }
+    .band::before{z-index:1}
+    .band .wrap{z-index:2}
+  }
+}
+/* La corsa è ±--par, in lunghezza assoluta: `inset` ci si adegua da solo, non
+   c'è più un secondo numero da tenere allineato. */
+@keyframes band-shift{
+  from{transform:translateY(calc(-1 * var(--par)))}
+  to  {transform:translateY(var(--par))}
 }
 /* sotto i 640px una riga da due sacrifica troppo il lato corto delle verticali
    (sotto i 150px di larghezza): le foto vanno una sopra l'altra, a piena
@@ -699,5 +756,8 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
   header.nav{transition:none}
   .shot{opacity:1!important;transform:none!important;transition:none!important}
   .hero,.band{background-attachment:scroll}
+  /* il layer resta, fermo a metà corsa: è un crop valido, come un
+     `background-position` centrato */
+  .band::after{animation:none}
   .shot img{transition:none}
 }
