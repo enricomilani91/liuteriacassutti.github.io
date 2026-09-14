@@ -28,7 +28,14 @@
 
 <header class="nav">
   <a class="brand" href="#home">
-    <img src="images/logo-cassutti-testo-normale-lungo.png"
+    <!-- lo stemma è ritagliato dal logo completo del footer (stessa incisione,
+         stesso bianco su trasparente): il footer mostra stemma + wordmark in
+         un solo file, qui il wordmark è già un'immagine a sé, quindi serviva
+         la sola iniziale. Decorativo — alt vuoto, il nome lo porta già il
+         wordmark accanto e il link non deve annunciarlo due volte. -->
+    <img class="brand-mark" src="images/stemma-cassutti.png"
+         width="40" height="46" alt="">
+    <img class="brand-word" src="images/logo-cassutti-testo-normale-lungo.png"
          srcset="images/logo-cassutti-testo-normale-lungo.png 1x,
                  images/logo-cassutti-testo-lungo-retina.png 2x"
          width="200" height="22" alt="Liuteria Cassutti">

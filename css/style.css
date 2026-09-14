@@ -66,8 +66,13 @@ header.nav{
   background:var(--charcoal);
 }
 
-.brand{display:flex;align-items:center;flex:0 0 auto}
-.brand img{width:200px;height:auto}
+.brand{display:flex;align-items:center;gap:0.7rem;flex:0 0 auto}
+/* Lo stemma sta a piena opacità: nel footer rende al 92% perché lì è largo
+   fino a 320px e un bianco pieno di quella taglia strappa sul charcoal, ma
+   a 40px l'incisione è già tutta tratti sottili e ogni punto di opacità in
+   meno la fa sparire. L'asset è servito a 120px, 3x della resa. */
+.brand-mark{width:40px;height:auto}
+.brand-word{width:200px;height:auto}
 
 nav.menu{display:flex;align-items:center;gap:clamp(0.9rem,1.7vw,1.75rem)}
 nav.menu a{
@@ -601,7 +606,8 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 /* il menu a 7 voci smette di entrare accanto al logo già sotto i 1000px */
 @media(max-width:980px){
   :root{--header-h:68px}
-  .brand img{width:170px}
+  .brand-mark{width:34px}
+  .brand-word{width:170px}
   nav.menu{
     position:fixed;inset:0 0 0 auto;width:min(78vw,320px);
     background:var(--charcoal);
