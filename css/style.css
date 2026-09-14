@@ -478,26 +478,38 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
    meno il form Contact Form 7 che la chiudeva: su GitHub Pages non ha un
    destinatario.
 
-   La foto della banda NON è quella dell'originale: `20180620_162247.jpg` non
+   La foto della banda non è quella dell'originale: `20180620_162247.jpg` non
    è mai stata catturata da Wayback (manca dal CDX l'intera cartella 2018/11)
-   e il sito live risponde 404. Al suo posto `laboratorio-slider-2.jpg`, dalla
-   stessa media library 2018/10 e mai usata altrove: stesso soggetto — il banco
-   di lavoro — dello scatto perduto, che era una foto di laboratorio del
-   giugno 2018. */
+   e il sito live risponde 404. Il ripiego d'archivio (`laboratorio-slider-2.jpg`)
+   è a sua volta caduto: il committente ha fornito lo scatto che voleva qui,
+   padre e figlio in strada con le custodie — che dice della sezione contatti
+   molto più di un banco di lavoro. */
 
 .band--contact{
-  background-image:url(../images/laboratorio-slider-2.jpg);
-  /* `center bottom` è la posizione dell'originale. Tiene solo in parte: sotto
-     una certa larghezza la foto (1,625:1) non può più essere ritagliata in
-     verticale — a 390px la banda è alta 270 e larga 390, `cover` la scala
-     sull'altezza e ne mostra tutta l'estensione verticale, fascia chiara
-     compresa. Il ritaglio in basso aiuta solo da ~900px in su.
-     Velo misurato sul reso, non stimato: dietro al titolo la luminanza va da 8
-     a 204 (media 96) a 1440px e da 8 a 206 (media 90) a 390px. Col velo a 0.35
-     il pixel peggiore dava 3,7:1 — basta per i 30px del desktop (testo grande,
-     soglia 3:1) ma non per i 20px sotto i 540px, che di soglia ne vogliono 4,5.
-     A 0.45 il caso peggiore sale a 4,9:1 a entrambe le larghezze. */
+  /* 1600×960 (1,667:1, la stessa proporzione delle altre bande), q48 — ma non
+     l'originale del committente: il terzo alto era cielo bruciato, media 248 su
+     255. Sotto `background-attachment:fixed` la foto è ancorata al viewport e
+     la banda ci scorre dentro, quindi *tutta* l'altezza passa dietro al titolo,
+     cielo compreso: il pixel peggiore era 255 a ogni larghezza (1:1 di
+     contrasto). Un velo uniforme capace di salvarlo (0,55) avrebbe spento la
+     foto, e un gradiente verticale non può inseguire il cielo perché il velo
+     scorre col blocco mentre la foto no — il trucco orizzontale di workshop e
+     new instruments qui non si applica, il problema è in alto, non a sinistra.
+     Risolto in esportazione, come si farebbe con un degradante ND: una spalla
+     sulle alte luci bruciata nel file (sotto 150 invariato, 255 → 200, raccordo
+     quadratico). Il cielo diventa foschia grigia, il soggetto non è toccato —
+     le custodie stanno a ~180 — e il velo può restare quello delle altre
+     bande. */
+  background-image:url(../images/contatti-fascia.jpg);
+  /* `center bottom` è la posizione dell'originale, e qui è anche quella giusta:
+     dove il ritaglio verticale morde, a cadere è il cielo e non i due che
+     camminano, che stanno nella metà bassa. */
   background-position:center bottom;
+  /* Rimisurato sul file con la spalla, stesso modello severo del parallax (il
+     pixel più chiaro dell'intera colonna su cui cade l'h2) a 1440/1170/900/600/
+     390px: caso peggiore 4,95:1, media da 7,0 a 9,3:1. Sopra la soglia AA a
+     ogni larghezza, comprese quelle dove l'h2 scende a 20px e non conta più
+     come testo grande. Il valore non cambia rispetto alla foto precedente. */
   --band-overlay:0.45;
 }
 .band--contact h2{color:#fff}
@@ -526,17 +538,77 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 .contact-lines a{color:inherit;transition:color .3s}
 .contact-lines a:hover{color:var(--tan)}
 
-/* ============ 09 · FOOTER ============ */
-/* legacy — riscritto allo step 8 */
-footer.site{padding:2.6rem 0;background:var(--ink);border-top:1px solid var(--hairline)}
-footer.site .wrap{display:flex;justify-content:space-between;align-items:center;gap:1.5rem;flex-wrap:wrap}
-footer.site .legal{
-  font-family:var(--body);font-size:0.68rem;letter-spacing:0.04em;color:var(--muted-dim);
-  line-height:1.7;max-width:70ch;
+/* I due profili social. Riga centrata sotto l'indirizzo, staccata dal filetto
+   `--rule` perché sono un'altra cosa dai recapiti: lì sopra c'è dove trovarlo,
+   qui dove seguirlo. Icone di solo tratto a 1,4px — lo stesso peso del resto
+   del sito, che non ha un solo glifo pieno — e l'etichetta accanto: il colore
+   e l'hover tan sono quelli delle voci di menu. */
+.contact-social{
+  list-style:none;
+  display:flex;justify-content:center;flex-wrap:wrap;
+  gap:clamp(1.4rem,4vw,2.6rem);
+  margin-top:clamp(1.8rem,4vw,2.4rem);
+  padding-top:clamp(1.6rem,3.5vw,2rem);
+  border-top:1px solid var(--rule);
 }
-footer.site .fmark{display:flex;align-items:center;gap:0.6rem;color:var(--muted)}
-footer.site .fmark img{width:20px;opacity:0.7;filter:brightness(1.6) sepia(0.2)}
-footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-transform:uppercase;font-size:0.95rem}
+.contact-social a{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  font-size:0.875rem;letter-spacing:0.06em;
+  color:var(--heading);
+  transition:color .3s;
+}
+.contact-social svg{
+  width:20px;height:20px;flex:none;
+  fill:none;stroke:currentColor;stroke-width:1.4;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+/* il puntino dell'obiettivo e la capsula dell'auricolare sono massa, non
+   contorno: da tratto uscirebbero due anellini */
+.contact-social svg .dot{fill:currentColor;stroke:none}
+.contact-social a:hover,.contact-social a:focus-visible{color:var(--tan)}
+
+/* ============ 09 · FOOTER ============ */
+/* Riscritto allo Step 8. Il footer legacy puntava a quattro token — `--ink`,
+   `--hairline`, `--muted`, `--muted-dim` — caduti dalla palette allo Step 1:
+   le regole risolvevano a nulla e il footer rendeva su fondo bianco con il
+   testo del body. Qui rientra nella palette vera.
+
+   Due livelli, come l'originale: area contatti su `--charcoal` chiusa in alto
+   dal filetto tan da 12px (è la firma visiva del footer di partenza — l'unico
+   punto del sito dove l'accento prende tanto spazio, e l'unico stacco possibile
+   fra il bianco della sezione contatti e il chrome scuro), poi la barra
+   copyright su `--charcoal-2`, un gradino più chiara. */
+footer.site{border-top:12px solid var(--tan)}
+
+.fmain{background:var(--charcoal);padding:clamp(2.4rem,5vw,3.4rem) 0}
+.fmain .wrap{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:clamp(1.8rem,4vw,3rem);flex-wrap:wrap;
+}
+/* Il logo completo fornito dal committente è tratto nero su fondo bianco: sul
+   charcoal sarebbe invisibile. In `images/` sta come PNG bianco su trasparente
+   (alfa = 255 - luminanza, così l'antialiasing dell'incisione resta morbido
+   invece di ritagliarsi a scalini) a 640px, il doppio della resa massima. */
+.fmark{width:clamp(210px,26vw,320px);height:auto;opacity:0.92}
+
+.freach{list-style:none;display:grid;gap:0.8rem}
+.freach li{display:flex;align-items:center;gap:0.75rem;color:#fff;font-size:0.875rem}
+.freach svg{
+  width:18px;height:18px;flex:none;
+  fill:none;stroke:var(--tan);stroke-width:1.4;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.freach svg .dot{fill:var(--tan);stroke:none}
+.freach a{transition:color .3s}
+.freach a:hover,.freach a:focus-visible{color:var(--tan)}
+
+.flegal{background:var(--charcoal-2);padding:1.1rem 0}
+.flegal p{
+  font-size:0.68rem;letter-spacing:0.04em;line-height:1.7;
+  /* niente cap di misura: e' una riga sola di dati legali, non un paragrafo
+     da leggere — spezzarla a 70ch la mandava a capo dopo "P.IVA" */
+  color:rgba(255,255,255,0.45);
+}
 
 /* ============ 10 · UTILITY & RESPONSIVE ============ */
 /* il menu a 7 voci smette di entrare accanto al logo già sotto i 1000px */
@@ -576,6 +648,13 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
    (sotto i 150px di larghezza): le foto vanno una sopra l'altra, a piena
    colonna, e la galleria smette di essere giustificata */
 @media(max-width:640px){
+  /* impilato, il footer si centra come il blocco contatti che ha sopra:
+     allineato a sinistra su una colonna sola resterebbe sbilenco */
+  .fmain .wrap{justify-content:center}
+  /* la colonna si centra intera, non riga per riga: centrando i singoli <li>
+     le due icone finivano su due verticali diverse (i testi sono di lunghezza
+     diversa) e la colonna si sfrangiava */
+  .freach{width:max-content;margin-inline:auto}
   .shots{display:block;max-width:420px;margin:0 auto}
   .shot{max-width:none}
   .shot + .shot{margin-top:15px}
