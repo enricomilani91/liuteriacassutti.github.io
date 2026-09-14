@@ -158,6 +158,49 @@
 
   </section>
 
+  <!-- NEW INSTRUMENTS -->
+  <!-- stesso pattern di about-me e workshop: banda parallax col nome della
+       sezione, poi il contenuto nel wrap. Qui il contenuto sono solo foto,
+       senza didascalia (indicazione del committente): niente <figcaption> e
+       niente tag, solo l'alt per chi non vede le immagini.
+       L'ordine delle foto non è casuale ma nemmeno alternato a rigore: è
+       calibrato sul wrap del flex perché le righe escano da 3, 3, 2, 3 e 4
+       foto (vedi `.shots` nel CSS). Se si aggiunge o si toglie uno scatto, le
+       righe sotto si ricompongono: va ricontrollato a schermo. -->
+  <section class="instruments" id="instruments">
+
+    <div class="band band--instruments">
+      <div class="wrap"><h2>New instruments</h2></div>
+    </div>
+
+    <div class="wrap">
+      <div class="shots">
+
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-bombatura.jpg" width="1200" height="800" loading="lazy" alt="Varnish and edge work on the upper bout of a new violin"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/strumenti-violino-fronte.jpg" width="800" height="1200" loading="lazy" alt="Front of a new violin, antiqued finish"></figure>
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-etichetta.jpg" width="1200" height="800" loading="lazy" alt="Maker&#8217;s label seen through the soundhole of a new instrument"></figure>
+
+        <figure class="shot" style="--r:0.667"><img src="images/strumenti-riccio-strad.jpg" width="800" height="1200" loading="lazy" alt="Scroll of a new violin"></figure>
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-effe-tavola.jpg" width="1200" height="800" loading="lazy" alt="Soundhole and C-bout corner of a new violin"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/strumenti-fondo-strad.jpg" width="800" height="1200" loading="lazy" alt="Back of a new violin"></figure>
+
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-effe-controluce.jpg" width="1200" height="800" loading="lazy" alt="Soundhole of a new violin in raking light"></figure>
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-banco.jpg" width="1200" height="800" loading="lazy" alt="Moulds, drawings and shavings on the workbench"></figure>
+
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-effe-catena.jpg" width="1200" height="800" loading="lazy" alt="Soundhole of a new violin top, antiqued"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/strumenti-violino-tavola.jpg" width="800" height="1200" loading="lazy" alt="Front of a new violin"></figure>
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-cavigliera.jpg" width="1200" height="800" loading="lazy" alt="Pegbox and neck of a new violin"></figure>
+
+        <figure class="shot" style="--r:0.723"><img src="images/strumenti-angolo.jpg" width="800" height="1106" loading="lazy" alt="Corner and soundhole detail of a new violin"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/strumenti-fondo.jpg" width="800" height="1200" loading="lazy" alt="Flamed maple back of a new violin"></figure>
+        <figure class="shot" style="--r:0.667"><img src="images/strumenti-riccio-certificato.jpg" width="800" height="1200" loading="lazy" alt="Scroll of a new violin, side view"></figure>
+        <figure class="shot" style="--r:1.5"><img src="images/strumenti-riccio-tre-quarti.jpg" width="1200" height="800" loading="lazy" alt="Scroll of a new violin seen from the front"></figure>
+
+      </div>
+    </div>
+
+  </section>
+
   <!-- WORKS -->
   <!-- stesso pattern della bio: banda parallax fullwidth col nome della
        sezione, poi il contenuto nel wrap. L'h2 "My last works" dell'originale
@@ -299,7 +342,7 @@ document.addEventListener('keydown',(e)=>{
   if(e.key==='Escape'&&menu.classList.contains('open')){setMenu(false);toggle.focus()}
 });
 
-// rivelazione a scorrimento delle foto della galleria, sfalsata per colonna
+// rivelazione a scorrimento delle foto delle due gallerie, sfalsata per colonna
 // (l'unico `.reveal` del sito stava nel blocco contatti legacy: caduto con lui)
 const gio=new IntersectionObserver((entries)=>{
   entries.forEach((e)=>{
@@ -310,7 +353,7 @@ const gio=new IntersectionObserver((entries)=>{
     }
   });
 },{threshold:0.12});
-document.querySelectorAll('.plate').forEach(el=>gio.observe(el));
+document.querySelectorAll('.plate,.shot').forEach(el=>gio.observe(el));
 
 </script>
 </body>
