@@ -86,13 +86,13 @@ nav.menu a:hover::after,nav.menu a:focus-visible::after{right:0}
 
 .menu-toggle{display:none}
 
-/* le ancore del menu non devono finire sotto l'header sticky */
-section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
-
-/* #home segue subito l'hero (alta 100svh - header-h): niente margine extra,
-   altrimenti lo scroll si ferma un attimo prima che l'header si agganci in
-   sticky e si vede uno spicchio di hero sotto l'header */
-#home{scroll-margin-top:var(--header-h)}
+/* Le ancore del menu non devono finire sotto l'header sticky. Il valore è
+   esattamente l'altezza dell'header, non uno in più: ogni pixel di margine
+   extra è un pixel di sezione precedente che resta visibile fra header e
+   banda, e siccome le sezioni chiudono su fondo bianco si legge come una
+   riga chiara. L'header è sticky con `height:var(--header-h)` fissa, quindi
+   il suo bordo inferiore cade sempre a quella quota e i due bordi combaciano. */
+section[id],main[id]{scroll-margin-top:var(--header-h)}
 
 :focus-visible{outline:2px solid var(--tan);outline-offset:3px}
 
