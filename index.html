@@ -396,12 +396,41 @@ let floor=0;
 const measure=()=>{floor=hero.offsetHeight-header.offsetHeight};
 measure();
 
+// Anticipo sul tap. Il tap sulla freccia dell'hero (come su ogni ancora
+// interna) avvia uno smooth scroll che si ferma *esattamente* sulla soglia:
+// se l'header comincia a scendere solo all'arrivo, i suoi 400ms di transizione
+// cadono a scroll ormai finito e per tutto quel tempo la striscia alta del
+// viewport resta scoperta — sopra la coda dell'hero, sotto l'inizio di `#home`
+// (lo `scroll-margin-top` le tiene apposta quello spazio), in mezzo niente.
+// Su desktop l'hero è alto e lo scroll lungo, quindi i 400ms si perdono dentro
+// il movimento; su un telefono l'hero è corto, lo scroll finisce subito e la
+// striscia vuota resta tutta in vista a pagina ferma. Alzando la bandiera al
+// tap le due animazioni corrono insieme e l'header è già al suo posto quando
+// lo scroll si ferma.
+let anticipating=false;
+
 // Politica di comparsa: l'header entra quando l'hero ha finito di scorrere e da
 // lì resta giù. Monotòna di proposito — l'auto-hide (compare risalendo, si
 // ritira scendendo) è stato provato e scartato.
+// Il `-1` assorbe lo scroll a frazioni di pixel: atterrare a 790.6 su una
+// soglia di 791 non deve leggersi come "non ci siamo ancora".
 function shouldShowHeader(y){
-  return y>=floor;
+  return y>=floor-1||anticipating;
 }
+
+// Fa scendere l'header subito e lo tiene giù per tutta la durata dello scroll
+// animato. Lo scroll animato non ha durata nota né API per aspettarlo: è
+// `scrollend` a dire quando si è fermato, e dove non c'è (Safari < 17,
+// Firefox < 109) un timeout largo fa da rete — al risveglio `syncHeader()`
+// rivaluta la soglia vera, quindi se nel frattempo si è tornati sull'hero
+// l'header si ritira come deve.
+const anticipateHeader=()=>{
+  anticipating=true;
+  syncHeader();
+  const settle=()=>{anticipating=false;syncHeader()};
+  if('onscrollend' in window) addEventListener('scrollend',settle,{once:true});
+  else setTimeout(settle,1000);
+};
 
 let ticking=false;
 const syncHeader=()=>{
@@ -419,6 +448,12 @@ addEventListener('scroll',()=>{
 },{passive:true});
 // il resize cambia l'altezza dell'hero, e con essa la quota di comparsa
 addEventListener('resize',()=>{measure();syncHeader()},{passive:true});
+// ogni ancora interna del documento porta a una sezione che sta sotto l'hero —
+// la freccia, lo skip-link, le voci di menu: nessuna di loro può atterrare in
+// un punto in cui l'header non debba esserci, quindi l'anticipo vale per tutte
+document.querySelectorAll('a[href^="#"]').forEach((a)=>{
+  a.addEventListener('click',anticipateHeader);
+});
 // al caricamento su un'ancora (`/#contact`) la pagina parte già scrollata:
 // l'header deve essere subito al posto giusto, senza aspettare uno scroll
 syncHeader();
