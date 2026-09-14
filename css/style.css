@@ -89,6 +89,11 @@ nav.menu a:hover::after,nav.menu a:focus-visible::after{right:0}
 /* le ancore del menu non devono finire sotto l'header sticky */
 section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
 
+/* #home segue subito l'hero (alta 100svh - header-h): niente margine extra,
+   altrimenti lo scroll si ferma un attimo prima che l'header si agganci in
+   sticky e si vede uno spicchio di hero sotto l'header */
+#home{scroll-margin-top:var(--header-h)}
+
 :focus-visible{outline:2px solid var(--tan);outline-offset:3px}
 
 /* l'header non è più il primo elemento della pagina (l'hero lo precede, come
@@ -225,11 +230,13 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
   background-position:center top;
   background-attachment:fixed;   /* fallback a `scroll` nel banner 10 */
 }
-/* la bio non ha overlay (--band-overlay resta 0 e il titolo è nero); la banda
-   dei lavori ne dichiara uno proprio nel banner 07 */
+/* la bio non ha overlay (--band-overlay resta 0 e il titolo è nero); le altre
+   bande dichiarano il proprio velo nel banner della loro sezione.
+   `--band-veil` è la via d'uscita per le foto che non si lasciano coprire da un
+   velo uniforme: chi la usa passa un `background` intero (vedi workshop). */
 .band::before{
   content:"";position:absolute;inset:0;
-  background:rgba(0,0,0,var(--band-overlay,0));
+  background:var(--band-veil,rgba(0,0,0,var(--band-overlay,0)));
 }
 .band .wrap{position:relative;width:100%}
 .band h2{
@@ -255,6 +262,83 @@ section[id],main[id]{scroll-margin-top:calc(var(--header-h) + 8px)}
    da entrambi i lati — un cap morbido e un'interlinea più aria del body. */
 .bio-prose{max-width:70ch;line-height:2.05}
 .bio-prose p + p{margin-top:1.5rem}
+
+/* ============ 06b · WORKSHOP ============ */
+/* Sezione nuova, non presente nell'archivio: costruita sul pattern di about-me
+   (banda parallax col nome della sezione, poi il contenuto nel wrap) perché è
+   lo standard di sezione scelto dal committente.
+   Le quattro voci sono righe `1fr 3fr` — la stessa proporzione di `.bio-body`,
+   non una nuova: la colonna di prosa cade sulla verticale della bio e le due
+   sezioni si leggono come un blocco solo. Nessuna scheda e nessun fondo
+   colorato: a separare le righe basta il filetto `--rule`, come ovunque nel
+   sito. Il filetto tan sotto il titolo del servizio è l'unico accento. */
+
+.band--workshop{
+  background-image:url(../images/servizi-fascia.jpg);
+  /* Foto fornita dal committente (4 riccioli in bianco, 4128×3096 → 2200px q48
+     come le altre bande). È l'unica banda dove un velo uniforme non funziona:
+     il soggetto è legno non verniciato — luminanza fino a 0.98, la più alta del
+     sito — su un fondo di libreria quasi nero. Un velo piatto abbastanza denso
+     da salvare il bianco sopra i riccioli (0.53+) spegnerebbe tutta la foto,
+     e a 0.45 il caso peggiore resta 3,37:1 a 600px: sotto la soglia AA, perché
+     l'h2 a quelle larghezze è 20px e non conta come "testo grande".
+     Il velo è quindi orizzontale e sta dove sta il titolo — sempre a sinistra,
+     a qualunque ritaglio, quindi gli stop non vanno riallineati al soggetto
+     come sarebbe successo con un gradiente verticale.
+     Misurato col modello severo del parallax: con `background-attachment:fixed`
+     la foto è ritagliata sul viewport e scorrendo *qualunque* fascia verticale
+     può capitare dietro al titolo, quindi il caso peggiore è il pixel più
+     chiaro dell'intera colonna, non della sola porzione visibile a banda
+     ferma. Così misurato a 1440/1170/900/600/390px il minimo è 4,86:1 (mobile)
+     — sopra la soglia AA — mentre il ricciolo grande di destra resta
+     praticamente scoperto (alpha 0.05–0.12). */
+  --band-veil:linear-gradient(90deg,
+    rgba(0,0,0,0.62) 0%,
+    rgba(0,0,0,0.55) 45%,
+    rgba(0,0,0,0.12) 75%,
+    rgba(0,0,0,0.05) 100%);
+}
+.band--workshop h2{color:#fff}
+
+.workshop{padding-bottom:clamp(3rem,8vw,120px)}
+
+.shop-body{padding-top:clamp(2.5rem,6vw,80px)}
+
+.shop-item{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 3fr;
+  gap:clamp(1.6rem,4vw,3rem);
+  padding:clamp(1.8rem,4vw,2.6rem) 0;
+}
+/* il primo servizio è già distanziato dalla banda da `.shop-body`: un altro
+   padding sopra lo staccherebbe il doppio degli altri */
+.shop-item:first-child{padding-top:0}
+.shop-item + .shop-item{border-top:1px solid var(--rule)}
+
+.shop-item h3{
+  font-style:italic;
+  font-weight:400;      /* il corsivo di Playfair a 500 impasta le grazie */
+  line-height:1.3;
+}
+.shop-item h3::after{
+  content:"";display:block;
+  width:34px;height:1px;background:var(--tan);
+  margin-top:clamp(0.7rem,1.5vw,1rem);
+}
+
+/* stessa misura e stessa interlinea della prosa della bio */
+.shop-prose{max-width:70ch;line-height:2.05}
+.shop-prose p + p{margin-top:1.5rem}
+
+/* i puntini elenco del documento diventano trattini tan: il pallino nero del
+   browser è l'unico segno geometrico della pagina e stona */
+.shop-list{list-style:none;margin-top:1rem}
+.shop-list li{position:relative;padding-left:1.7rem;line-height:1.85}
+.shop-list li + li{margin-top:0.4rem}
+.shop-list li::before{
+  content:"";position:absolute;left:0;top:0.92em;
+  width:11px;height:1px;background:var(--tan);
+}
 
 /* ============ 07 · WORKS ============ */
 /* Il titolo dell'originale ("My last works", spezzato su tre righe in una
@@ -428,6 +512,9 @@ footer.site .fmark span{font-family:var(--display);letter-spacing:0.14em;text-tr
 @media(max-width:860px){
   .intro-grid{grid-template-columns:1fr;max-width:620px}
   .bio-body{grid-template-columns:1fr}
+  /* impilate, le righe del listino hanno bisogno di meno aria fra titolo e
+     testo di quanta ne serva fra due colonne */
+  .shop-item{grid-template-columns:1fr;gap:clamp(0.9rem,2.5vw,1.2rem)}
   /* background-attachment:fixed è rotto su iOS e inutile sul touch —
      l'originale disattivava il parallax sotto i 920px, noi sotto 860 */
   .hero,.band{background-attachment:scroll}
