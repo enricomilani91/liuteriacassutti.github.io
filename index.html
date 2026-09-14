@@ -15,17 +15,6 @@
 
 <a class="skip-link" href="#main">Skip to content</a>
 
-<!-- HERO -->
-<!-- nell'originale lo slider stava sopra l'header (slider_position:"above")
-     e occupava 100vh - header: l'header resta appoggiato in basso alla prima
-     schermata e si incolla in alto allo scroll (position:sticky, banner 03) -->
-<section class="hero">
-  <div class="hero-inner">
-    <h1>Liuteria Cassutti</h1>
-    <p>The art of giving voice to wood</p>
-  </div>
-</section>
-
 <header class="nav">
   <a class="brand" href="#home">
     <!-- lo stemma è ritagliato dal logo completo del footer (stessa incisione,
@@ -52,6 +41,29 @@
     <a href="#contact">contacts</a>
   </nav>
 </header>
+
+<!-- HERO -->
+<!-- L'hero prende tutto il viewport (100svh): l'header non gli toglie più
+     spazio perché è uscito dal flusso (position:fixed, banner 03) e resta
+     nascosto finché non si scrolla. La freccia in basso a sinistra è l'unico
+     invito a proseguire, e porta alla prima sezione. -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Liuteria Cassutti</h1>
+    <p>The art of giving voice to wood</p>
+  </div>
+
+  <!-- freccia "scorri": stelo + punta in un solo path, allineata al margine
+       sinistro dell'header (stesso clamp del suo padding) così cade sotto il
+       logo. È un link vero alla prima sezione, non un ornamento: chi naviga da
+       tastiera lo raggiunge e lo attiva. -->
+  <a class="hero-scroll" href="#home" aria-label="Scroll to content">
+    <svg viewBox="0 0 24 40" width="24" height="40" aria-hidden="true" focusable="false">
+      <path d="M12 2v32M4 26l8 8 8-8"/>
+    </svg>
+  </a>
+</section>
+
 
 <main id="main">
 
@@ -351,7 +363,7 @@
 </footer>
 
 <script>
-// mobile menu — l'header è sempre opaco, non serve solidificarlo allo scroll
+// mobile menu
 const toggle=document.getElementById('toggle');
 const menu=document.getElementById('menu');
 const setMenu=(open)=>{
@@ -364,6 +376,36 @@ menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(fal
 document.addEventListener('keydown',(e)=>{
   if(e.key==='Escape'&&menu.classList.contains('open')){setMenu(false);toggle.focus()}
 });
+
+// ---- header a comparsa ----------------------------------------------------
+// L'hero occupa tutto il viewport e l'header gli sta sopra, fuori dal flusso e
+// nascosto: è questo blocco a farlo scendere, aggiungendogli `.show`.
+const header=document.querySelector('header.nav');
+
+// TODO — politica di comparsa dell'header.
+//   `y`     = posizione di scroll corrente
+//   `prevY` = posizione all'ultimo tick (negativo = si sta risalendo)
+// Ritorna true se l'header va mostrato. Il valore qui sotto è solo una base
+// funzionante: mostra l'header dopo il 60% della prima schermata.
+function shouldShowHeader(y,prevY){
+  return y > innerHeight * 0.6;
+}
+
+let prevY=scrollY,ticking=false;
+const syncHeader=()=>{
+  const y=scrollY;
+  // il drawer aperto tiene l'header giù comunque: nasconderglielo sotto
+  // porterebbe via anche la X per richiuderlo
+  header.classList.toggle('show',shouldShowHeader(y,prevY)||menu.classList.contains('open'));
+  prevY=y;ticking=false;
+};
+// lo scroll arriva a raffica: un solo ricalcolo per frame
+addEventListener('scroll',()=>{
+  if(!ticking){ticking=true;requestAnimationFrame(syncHeader)}
+},{passive:true});
+// al caricamento su un'ancora (`/#contact`) la pagina parte già scrollata:
+// l'header deve essere subito al posto giusto, senza aspettare uno scroll
+syncHeader();
 
 // rivelazione a scorrimento delle foto delle due gallerie — new instruments e
 // restoration, stesso componente `.shot` — sfalsata per colonna

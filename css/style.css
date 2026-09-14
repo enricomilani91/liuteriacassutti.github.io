@@ -57,14 +57,24 @@ h6{font-size:0.95rem}
 
 
 /* ============ 03 · HEADER ============ */
+/* L'header è uscito dal flusso: l'hero occupa tutto il viewport e l'header gli
+   sta sopra, nascosto, finché lo scroll non supera la soglia decisa in
+   `shouldShowHeader()` (in fondo a index.html) — allora il JS gli mette `.show`.
+   ATTENZIONE allo stato mostrato: è `transform:none` e non `translateY(0)`.
+   Un transform diverso da `none` rende l'header il blocco contenitore dei suoi
+   discendenti `position:fixed`, e sotto i 980px il drawer del menu è proprio
+   uno di quelli: si ritroverebbe alto 90px invece che tutto il viewport. */
 header.nav{
-  position:sticky;top:0;z-index:50;
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  transform:translateY(-100%);
+  transition:transform .4s cubic-bezier(.22,.61,.36,1);
   height:var(--header-h);
   display:flex;align-items:center;justify-content:space-between;
   gap:1.5rem;
   padding:0 clamp(1.4rem,4vw,3.5rem);
   background:var(--charcoal);
 }
+header.nav.show{transform:none}
 
 .brand{display:flex;align-items:center;gap:0.7rem;flex:0 0 auto}
 /* Lo stemma sta a piena opacità: nel footer rende al 92% perché lì è largo
@@ -91,19 +101,18 @@ nav.menu a:hover::after,nav.menu a:focus-visible::after{right:0}
 
 .menu-toggle{display:none}
 
-/* Le ancore del menu non devono finire sotto l'header sticky. Il valore è
+/* Le ancore del menu non devono finire sotto l'header fisso. Il valore è
    esattamente l'altezza dell'header, non uno in più: ogni pixel di margine
    extra è un pixel di sezione precedente che resta visibile fra header e
    banda, e siccome le sezioni chiudono su fondo bianco si legge come una
-   riga chiara. L'header è sticky con `height:var(--header-h)` fissa, quindi
+   riga chiara. L'header ha `height:var(--header-h)` fissa, quindi
    il suo bordo inferiore cade sempre a quella quota e i due bordi combaciano. */
 section[id],main[id]{scroll-margin-top:var(--header-h)}
 
 :focus-visible{outline:2px solid var(--tan);outline-offset:3px}
 
-/* l'header non è più il primo elemento della pagina (l'hero lo precede, come
-   nell'originale): lo skip-link resta l'unico modo rapido per saltare al
-   contenuto da tastiera */
+/* l'header è tornato primo nel DOM (fixed, l'ordine non vincola più il
+   layout): lo skip-link scavalca hero e menu per portare al contenuto */
 .skip-link{
   position:absolute;left:50%;top:0;transform:translate(-50%,-120%);
   z-index:100;padding:0.7rem 1.2rem;
@@ -116,10 +125,11 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 /* ============ 04 · HERO ============ */
 /* Ricostruito allo step 3 sul comportamento reale dell'originale: lo slider
    Avada aveva data-full_screen="1" con slider_position:"above", quindi il JS
-   del tema gli dava height = window.height() - headerHeight. Qui è CSS puro. */
+   del tema gli dava height = window.height() - headerHeight. Qui l'hero prende
+   invece tutto il viewport, con l'header in sovrimpressione a comparsa. */
 .hero{
   position:relative;
-  height:calc(100svh - var(--header-h));
+  height:100svh;   /* pieno: l'header è fuori dal flusso e non scala più l'hero */
   min-height:420px;
   display:grid;place-items:center;
   padding:0 clamp(1.4rem,5vw,3rem);
@@ -185,6 +195,45 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 @keyframes hero-rise{
   from{opacity:0;transform:translateY(22px)}
   to{opacity:1;transform:none}
+}
+
+/* Freccia "scorri". Allineata al margine sinistro dell'header — stesso clamp
+   del suo padding — così cade a piombo sotto il logo. L'area cliccabile è più
+   grande del disegno (padding sul link) perché 24px di tratto sono un bersaglio
+   troppo piccolo per il dito: il padding la porta a ~48px. */
+.hero-scroll{
+  position:absolute;z-index:1;
+  left:calc(clamp(1.4rem,4vw,3.5rem) - 0.75rem);
+  bottom:clamp(1rem,3.5vh,2.2rem);
+  padding:0.75rem;
+  color:#fff;
+  opacity:0.85;
+  transition:opacity .3s ease;
+}
+.hero-scroll:hover,.hero-scroll:focus-visible{opacity:1}
+.hero-scroll svg{
+  display:block;
+  fill:none;stroke:currentColor;
+  stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
+  /* dietro il tratto la foto è scura (misurato 9:1 a 1440x900), ma il ritaglio
+     di `cover` si sposta a ogni formato e in quell'angolo ci sono trucioli
+     chiarissimi: l'ombra tiene il tratto leggibile senza doverla rimisurare a
+     ogni breakpoint */
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.55));
+}
+
+/* Rimbalzo leggero: la freccia scende e risale con un contraccolpo smorzato,
+   poi resta ferma metà ciclo — un'animazione continua senza pausa diventa
+   rumore visivo accanto a un titolo che vuole calma. L'animazione sta sullo
+   svg e non sul link: il link porta il padding dell'area cliccabile, che non
+   deve muoversi sotto il dito. */
+@media(prefers-reduced-motion:no-preference){
+  .hero-scroll svg{animation:hero-nudge 2.6s cubic-bezier(.45,0,.55,1) 1.2s infinite}
+}
+@keyframes hero-nudge{
+  0%,45%,100%{transform:translateY(0)}
+  18%{transform:translateY(9px)}
+  31%{transform:translateY(3px)}
 }
 
 /* ============ 05 · INTRO ============ */
@@ -647,6 +696,7 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 }
 @media(prefers-reduced-motion:reduce){
   *{scroll-behavior:auto!important}
+  header.nav{transition:none}
   .shot{opacity:1!important;transform:none!important;transition:none!important}
   .hero,.band{background-attachment:scroll}
   .shot img{transition:none}
