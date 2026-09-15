@@ -178,9 +178,12 @@
 
   <!-- NEW INSTRUMENTS -->
   <!-- stesso pattern di about-me e workshop: banda parallax col nome della
-       sezione, poi il contenuto nel wrap. Qui il contenuto sono solo foto,
-       senza didascalia (indicazione del committente): niente <figcaption> e
-       niente tag, solo l'alt per chi non vede le immagini.
+       sezione, poi il contenuto nel wrap. Struttura a due tempi come
+       restoration: prima la prosa sulla griglia `1fr 3fr` di bio e workshop
+       (`.lead-body`) — sottotitolo in corsivo nella colonna stretta, testo in
+       quella larga — poi la galleria giustificata.
+       Le foto restano senza didascalia (indicazione del committente): niente
+       <figcaption> e niente tag, solo l'alt per chi non vede le immagini.
        L'ordine delle foto non è casuale ma nemmeno alternato a rigore: è
        calibrato sul wrap del flex perché le righe escano da 3, 3, 2, 3 e 4
        foto (vedi `.shots` nel CSS). Se si aggiunge o si toglie uno scatto, le
@@ -189,6 +192,25 @@
 
     <div class="band band--instruments">
       <div class="wrap"><h2>New instruments</h2></div>
+    </div>
+
+    <div class="wrap lead-body">
+      <div class="lead-side">
+        <h3>Building:<br>The Birth<br>of a Voice</h3>
+      </div>
+      <div class="lead-prose">
+        <p>Every instrument has its own story and a unique voice. Starting a new
+          build means setting off on an unpredictable journey, one that, as it
+          unfolds, enchants and completely absorbs me, guided by the constant
+          pursuit of superior acoustics and captivating aesthetics.</p>
+        <p>To give soul to my creations, I rely on the rigorous study of the great
+          Italian tradition. I use Venetian and classic Cremonese models, closely
+          analyzing the curves, style and proportions that characterize the great
+          masters of the 17th and 18th centuries. Grasping the secrets of the past
+          is the solid foundation on which I build my daily research, giving life
+          to contemporary instruments and to antiqued-style copies of classic
+          makers.</p>
+      </div>
     </div>
 
     <div class="wrap">
@@ -235,11 +257,11 @@
       <div class="wrap"><h2>Restoration</h2></div>
     </div>
 
-    <div class="wrap resto-body">
-      <div class="resto-side">
+    <div class="wrap lead-body">
+      <div class="lead-side">
         <h3>Between<br>History<br>and Innovation</h3>
       </div>
-      <div class="resto-prose">
+      <div class="lead-prose">
         <p>The deep fascination of restoration lies, for me, in an extraordinary
           contrast: the noble antiquity of the instrument I hold in my hands and the
           modernity of the techniques and materials I use today to care for it.</p>

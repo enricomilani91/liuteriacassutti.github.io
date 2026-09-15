@@ -436,6 +436,34 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 
 .instruments{padding-bottom:clamp(3rem,8vw,120px)}
 
+/* Testo introduttivo della sezione. Componente condiviso, non specifico di new
+   instruments: sotto sta identico anche in restoration, come `.shots`/`.shot`
+   qui sotto — definito dove compare la prima volta nel documento, di lì in poi
+   riusato. Stessa proporzione di `.bio-body` e `.shop-item`, non una nuova: la
+   colonna di prosa cade sulla verticale della bio e del workshop, e le quattro
+   sezioni si leggono come un blocco solo. */
+.lead-body{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 3fr;
+  gap:clamp(1.6rem,4vw,3rem);
+  padding-top:clamp(2.5rem,6vw,80px);
+}
+/* corsivo col filetto tan: la stessa firma dei titoli di servizio del workshop.
+   Qui però è il sottotitolo della sezione, uno solo, non una riga di listino. */
+.lead-side h3{
+  font-style:italic;
+  font-weight:400;      /* come .shop-item h3: il corsivo di Playfair a 500 impasta le grazie */
+  line-height:1.3;
+}
+.lead-side h3::after{
+  content:"";display:block;
+  width:34px;height:1px;background:var(--tan);
+  margin-top:clamp(0.7rem,1.5vw,1rem);
+}
+/* stessa misura e stessa interlinea della prosa della bio e del workshop */
+.lead-prose{max-width:70ch;line-height:2.05}
+.lead-prose p + p{margin-top:1.5rem}
+
 .shots{
   display:flex;flex-wrap:wrap;
   /* solo l'ultima riga può restare corta: centrarla evita la coda ragged */
@@ -474,8 +502,8 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 
 /* ============ 07 · RESTORATION ============ */
 /* Sezione nuova, al posto di "My last works". Nessun componente nuovo: la prosa
-   riusa la griglia `1fr 3fr` di bio e workshop, la galleria riusa `.shots`/
-   `.shot` di new instruments senza una sola regola in più. */
+   riusa `.lead-body` e la galleria `.shots`/`.shot`, entrambi definiti in new
+   instruments, senza una sola regola in più. */
 
 .band--restoration{
   background-image:url(../images/restauro-fascia.jpg);
@@ -502,31 +530,6 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 .band--restoration h2{color:#fff}
 
 .restoration{padding-bottom:clamp(3rem,8vw,120px)}
-
-/* stessa proporzione di `.bio-body` e `.shop-item`, non una nuova: la colonna
-   di prosa cade sulla verticale della bio e del workshop, e le tre sezioni si
-   leggono come un blocco solo */
-.resto-body{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 3fr;
-  gap:clamp(1.6rem,4vw,3rem);
-  padding-top:clamp(2.5rem,6vw,80px);
-}
-/* corsivo col filetto tan: la stessa firma dei titoli di servizio del workshop.
-   Qui però è il sottotitolo della sezione, uno solo, non una riga di listino. */
-.resto-side h3{
-  font-style:italic;
-  font-weight:400;      /* come .shop-item h3: il corsivo di Playfair a 500 impasta le grazie */
-  line-height:1.3;
-}
-.resto-side h3::after{
-  content:"";display:block;
-  width:34px;height:1px;background:var(--tan);
-  margin-top:clamp(0.7rem,1.5vw,1rem);
-}
-/* stessa misura e stessa interlinea della prosa della bio e del workshop */
-.resto-prose{max-width:70ch;line-height:2.05}
-.resto-prose p + p{margin-top:1.5rem}
 
 /* ============ 08 · CONTACT ============ */
 /* La pagina /contacts/ dell'archivio ha la stessa impalcatura di about-me e
@@ -681,7 +684,7 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
 @media(max-width:860px){
   .intro-grid{grid-template-columns:1fr;max-width:620px}
   .bio-body{grid-template-columns:1fr}
-  .resto-body{grid-template-columns:1fr}
+  .lead-body{grid-template-columns:1fr}
   /* impilate, le righe del listino hanno bisogno di meno aria fra titolo e
      testo di quanta ne serva fra due colonne */
   .shop-item{grid-template-columns:1fr;gap:clamp(0.9rem,2.5vw,1.2rem)}
