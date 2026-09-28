@@ -656,6 +656,8 @@ section[id],main[id]{scroll-margin-top:var(--header-h)}
      da leggere — spezzarla a 70ch la mandava a capo dopo "P.IVA" */
   color:rgba(255,255,255,0.45);
 }
+.flegal a{text-decoration:underline;transition:color .3s}
+.flegal a:hover{color:var(--tan)}
 
 /* ============ 10 · UTILITY & RESPONSIVE ============ */
 /* il menu a 7 voci smette di entrare accanto al logo già sotto i 1000px */
